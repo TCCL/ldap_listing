@@ -1,0 +1,4 @@
+administer ldap_listing:
+  title: 'Administer LDAP Directory Listing Settings'
+  description: 'Manage and configure the LDAP Directory Listing settings'
+  restrict access: TRUE

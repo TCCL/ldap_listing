@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 function ldap_listing_help($route_name,RouteMatchInterface $route_match) {
   switch ($route_name) {
-  case 'help.page.ldap_directory':
+  case 'help.page.ldap_listing':
     return '
       <h2>LDAP Directory</h2>
       <p>This module generates a directory listing page for entities queried from an LDAP server.</p>

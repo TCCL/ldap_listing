@@ -1,0 +1,12 @@
+ldap_listing.directory_section.*:
+  type: config_entity
+  label: 'Directory Listing Section config'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name for this directory listing section configuration'
+    uuid:
+      type: string
+    label:
+      type: string
+      name: 'Display name for section'

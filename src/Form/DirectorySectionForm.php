@@ -37,6 +37,35 @@ class DirectorySectionForm extends EntityForm {
       '#disabled' => !$this->entity->isNew(),
     ];
 
+    $form['directory_section']['abbrev'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Abbreviation'),
+      '#description' => $this->t('Choose an abbreviation that describes this section'),
+      '#default_value' => $this->entity->get('abbrev'),
+      '#maxlength' => 16,
+      '#required' => false,
+    ];
+
+    $form['directory_section']['group_dn'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Group DN'),
+      '#description' => $this->t(
+        'The Distinguished Name of the LDAP group to assign to this section. '
+        . 'The members of the group will populate this directory listing section.'
+      ),
+      '#default_value' => $this->entity->get('group_dn'),
+      '#maxlength' => 1024,
+      '#required' => true,
+    ];
+
+    $form['directory_section']['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Weight'),
+      '#default_value' => $this->entity->get('weight') ?? 0,
+      '#description' => $this->t('The weight value used to sort the list of sections'),
+      '#required' => false,
+    ];
+
     return $form;
   }
 
@@ -44,6 +73,8 @@ class DirectorySectionForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form,FormStateInterface $form_state) {
+    $this->entity->setGroupDN($form_state->getValue('group_dn'));
+
     $status = $this->entity->save();
 
     if ($status == SAVED_NEW) {

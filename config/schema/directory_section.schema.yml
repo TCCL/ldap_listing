@@ -10,3 +10,12 @@ ldap_listing.directory_section.*:
     label:
       type: string
       name: 'Display name for section'
+    abbrev:
+      type: string
+      name: 'Abbreviation'
+    group_dn:
+      type: string
+      name: 'DN of LDAP group'
+    weight:
+      type: integer
+      name: 'Weight'

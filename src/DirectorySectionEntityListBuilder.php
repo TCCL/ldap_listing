@@ -17,6 +17,7 @@ class DirectorySectionEntityListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Heading');
+    $header['abbrev'] = $this->t('Abbreviation');
     return $header + parent::buildHeader();
   }
 
@@ -27,6 +28,7 @@ class DirectorySectionEntityListBuilder extends ConfigEntityListBuilder {
     $row = [];
 
     $row['label'] = $entity->label();
+    $row['abbrev'] = $entity->get('abbrev');
 
     return $row + parent::buildRow($entity);
   }

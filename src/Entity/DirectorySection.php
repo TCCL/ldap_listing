@@ -43,11 +43,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   config_export = {
  *     "id",
  *     "uuid",
- *     "label"
+ *     "label",
+ *     "abbrev",
+ *     "group_dn"
  *   }
  * )
  */
-class DirectorySection extends ConfigEntityBase {
+class DirectorySection extends ConfigEntityBase implements DirectorySectionInterface {
   /**
    * Creates a new DirectorySection instance.
    *
@@ -58,5 +60,20 @@ class DirectorySection extends ConfigEntityBase {
    */
   public function __construct(array $values,$entity_type) {
     parent::__construct($values,$entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroupDN() : string {
+    return $this->get('group_dn')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setGroupDN(string $groupDN) {
+    $this->set('group_dn',$groupDN);
+    return $this;
   }
 }

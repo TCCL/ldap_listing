@@ -20,7 +20,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "list_builder" = "Drupal\ldap_listing\DirectorySectionEntityListBuilder",
  *     "form" = {
  *       "add" = "Drupal\ldap_listing\Form\DirectorySectionForm",
- *       "edit" = "Drupal\ldap_listing\Form\DirectorySectionForm"
+ *       "edit" = "Drupal\ldap_listing\Form\DirectorySectionForm",
+ *       "delete" = "Drupal\ldap_listing\Form\DirectorySectionDeleteForm"
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
@@ -36,6 +37,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   links = {
  *     "add-form" = "/admin/structure/ldap_listing_directory_section/add",
  *     "edit-form" = "/admin/structure/ldap_listing_directory_section/{ldap_listing_directory_section}/edit",
+ *     "delete-form" = "/admin/structure/ldap_listing_directory_section/{ldap_listing_directory_section}/delete",
  *     "collection" = "/admin/structure/ldap_listing_directory_section"
  *   },
  *   config_export = {

@@ -14,14 +14,29 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  * Defines the directory_section entity.
  *
  * @ConfigEntityType(
- *   id = "directory_section",
+ *   id = "ldap_listing_directory_section",
  *   label = @Translation("Directory Listing Section"),
- *   handlers = {},
+ *   handlers = {
+ *     "list_builder" = "Drupal\ldap_listing\DirectorySectionEntityListBuilder",
+ *     "form" = {
+ *       "add" = "Drupal\ldap_listing\Form\DirectorySectionForm",
+ *       "edit" = "Drupal\ldap_listing\Form\DirectorySectionForm"
+ *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     }
+ *   },
  *   config_prefix = "directory_section",
  *   admin_permission = "administer ldap_listing",
  *   entity_keys = {
  *     "id" = "id",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "label" = "label"
+ *   },
+ *   links = {
+ *     "add-form" = "/admin/structure/ldap_listing_directory_section/add",
+ *     "edit-form" = "/admin/structure/ldap_listing_directory_section/{ldap_listing_directory_section}/edit",
+ *     "collection" = "/admin/structure/ldap_listing_directory_section"
  *   },
  *   config_export = {
  *     "id",

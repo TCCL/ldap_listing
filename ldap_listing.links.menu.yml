@@ -1,0 +1,8 @@
+## ldap_listing.links.menu.yml
+
+entity.ldap_listing_directory_section.collection:
+  title: 'LDAP Directory Listing Sections'
+  route_name: entity.ldap_listing_directory_section.collection
+  description: 'Configure LDAP directory listing sections'
+  parent: system.admin_structure
+  weight: 100

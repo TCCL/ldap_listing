@@ -9,13 +9,20 @@ ldap_listing.directory_section.*:
       type: string
     label:
       type: string
-      name: 'Display name for section'
+      label: 'Display name for section'
     abbrev:
       type: string
-      name: 'Abbreviation'
+      label: 'Abbreviation'
     group_dn:
       type: string
-      name: 'DN of LDAP group'
+      label: 'DN of LDAP group'
+    header_entries:
+      type: sequence
+      label: 'List of additional entries to display in the header'
+      sequence:
+        type: sequence
+        sequence:
+          type: string
     weight:
       type: integer
-      name: 'Weight'
+      label: 'Weight'

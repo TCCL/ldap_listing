@@ -22,4 +22,14 @@ interface DirectorySectionInterface extends ConfigEntityInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
    */
   public function setGroupDN(string $groupDN);
+
+  /**
+   * @return string
+   */
+  public function getHeaderEntriesText() : string;
+
+  /**
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   */
+  public function setHeaderEntriesFromText(string $text);
 }

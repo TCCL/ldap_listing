@@ -45,6 +45,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "uuid",
  *     "label",
  *     "abbrev",
+ *     "header_entries",
  *     "group_dn"
  *   }
  * )
@@ -75,5 +76,54 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
   public function setGroupDN(string $groupDN) {
     $this->set('group_dn',$groupDN);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHeaderEntriesText() : string {
+    $entries = $this->get('header_entries');
+    return self::makeTextFromEntries($entries);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHeaderEntriesFromText(string $text) {
+    $entries = self::parseEntriesFromText($text);
+    $this->set('header_entries',$entries);
+
+    return $text;
+  }
+
+  private static function makeTextFromEntries($entries) : string {
+    if (!is_array($entries)) {
+      return '';
+    }
+
+    $text = '';
+    foreach ($entries as $entry) {
+      $text .= implode(',',$entry);
+      $text .= PHP_EOL;
+    }
+
+    return $text;
+  }
+
+  private static function parseEntriesFromText(string $text) : array {
+    $lines = preg_split('/\r\n|\r|\n/',$text);
+
+    $entries = [];
+    foreach ($lines as $line) {
+      $entry = preg_split('/ *, */',$line);
+
+      if (count(array_filter($entry)) == 0) {
+        continue;
+      }
+
+      $entries[] = $entry;
+    }
+
+    return $entries;
   }
 }

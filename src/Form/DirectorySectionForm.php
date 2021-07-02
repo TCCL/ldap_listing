@@ -58,6 +58,18 @@ class DirectorySectionForm extends EntityForm {
       '#required' => true,
     ];
 
+    $form['directory_section']['header_entries'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Static Header Entries'),
+      '#description' => $this->t(
+        'Static entries that are added to the section header. Each comma-separated '
+        . 'element is rendered as a distinct column in the entry row.'
+      ),
+      '#default_value' => $this->entity->getHeaderEntriesText(),
+      '#cols' => 80,
+      '#rows' => 5,
+    ];
+
     $form['directory_section']['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Weight'),
@@ -74,6 +86,7 @@ class DirectorySectionForm extends EntityForm {
    */
   public function save(array $form,FormStateInterface $form_state) {
     $this->entity->setGroupDN($form_state->getValue('group_dn'));
+    $this->entity->setHeaderEntriesFromText($form_state->getValue('header_entries'));
 
     $status = $this->entity->save();
 

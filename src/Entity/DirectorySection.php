@@ -9,6 +9,7 @@
 namespace Drupal\ldap_listing\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\ldap_listing\Support\LineParser;
 
 /**
  * Defines the directory_section entity.
@@ -120,9 +121,17 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
       return '';
     }
 
+    $entry2text = function($entry) {
+      if (strpos($entry,',') !== false) {
+        return '"' . $entry . '"';
+      }
+
+      return $entry;
+    };
+
     $text = '';
     foreach ($entries as $entry) {
-      $text .= implode(',',$entry);
+      $text .= implode(',',array_map($entry2text,$entry));
       $text .= PHP_EOL;
     }
 
@@ -134,7 +143,8 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
 
     $entries = [];
     foreach ($lines as $line) {
-      $entry = preg_split('/ *, */',$line);
+      $parser = new LineParser($line);
+      $entry = $parser->getTokens();
 
       if (count(array_filter($entry)) == 0) {
         continue;

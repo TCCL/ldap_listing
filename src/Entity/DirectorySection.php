@@ -33,7 +33,8 @@ use Drupal\ldap_listing\Support\LineParser;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "label" = "label"
+ *     "label" = "label",
+ *     "weight" = "weight"
  *   },
  *   links = {
  *     "add-form" = "/admin/structure/ldap_listing_directory_section/add",
@@ -48,11 +49,19 @@ use Drupal\ldap_listing\Support\LineParser;
  *     "abbrev",
  *     "group_dn",
  *     "header_entries",
- *     "footer_entries"
+ *     "footer_entries",
+ *     "weight"
  *   }
  * )
  */
 class DirectorySection extends ConfigEntityBase implements DirectorySectionInterface {
+  /**
+   * The weight value used to sort the configuration entity in a list.
+   *
+   * @var int
+   */
+  protected $weight;
+
   /**
    * Creates a new DirectorySection instance.
    *

@@ -1,0 +1,6 @@
+## ldap_listing.services.yml
+
+services:
+  ldap_listing.query:
+    class: '\Drupal\ldap_listing\DirectoryQuery'
+    arguments: ['@entity_type.manager','@ldap.bridge']

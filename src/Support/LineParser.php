@@ -22,6 +22,7 @@ class LineParser {
    * @param string $line
    */
   public function __construct(string $line) {
+    $this->line = $line;
     $this->makeTokens(str_split($line));
   }
 

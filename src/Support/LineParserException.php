@@ -8,7 +8,7 @@
 
 namespace Drupal\ldap_listing\Support;
 
-use Exception;
+use Drupal\ldap_listing\Exception;
 
 class LineParserException extends Exception {
 

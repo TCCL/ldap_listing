@@ -13,4 +13,4 @@ dependencies:
 
 php: 7.3
 
-# configure:
+configure: ldap_listing.settings_page

@@ -45,8 +45,9 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "uuid",
  *     "label",
  *     "abbrev",
+ *     "group_dn",
  *     "header_entries",
- *     "group_dn"
+ *     "footer_entries"
  *   }
  * )
  */
@@ -93,7 +94,25 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
     $entries = self::parseEntriesFromText($text);
     $this->set('header_entries',$entries);
 
-    return $text;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFooterEntriesText() : string {
+    $entries = $this->get('footer_entries');
+    return self::makeTextFromEntries($entries);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFooterEntriesFromText(string $text) {
+    $entries = self::parseEntriesFromText($text);
+    $this->set('footer_entries',$entries);
+
+    return $this;
   }
 
   private static function makeTextFromEntries($entries) : string {

@@ -32,4 +32,14 @@ interface DirectorySectionInterface extends ConfigEntityInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
    */
   public function setHeaderEntriesFromText(string $text);
+
+  /**
+   * @return string
+   */
+  public function getFooterEntriesText() : string;
+
+  /**
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   */
+  public function setFooterEntriesFromText(string $text);
 }

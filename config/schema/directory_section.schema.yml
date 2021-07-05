@@ -23,6 +23,13 @@ ldap_listing.directory_section.*:
         type: sequence
         sequence:
           type: string
+    footer_entries:
+      type: sequence
+      label: 'List of additional entries to display in the footer'
+      sequence:
+        type: sequence
+        sequence:
+          type: string
     weight:
       type: integer
       label: 'Weight'

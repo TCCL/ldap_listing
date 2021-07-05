@@ -60,6 +60,27 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
+    $form['base_dn'] = [
+      '#type' => 'textfield',
+      '#title' => 'Base DN',
+      '#default_value' => $config->get('base_dn'),
+      '#description' => (
+        'The base Distinguished Name that identifies the root of the '
+        . 'user directory'
+      ),
+    ];
+
+    $form['filter'] = [
+      '#type' => 'textfield',
+      '#title' => 'Filter Format',
+      '#default_value' => $config->get('filter'),
+      '#description' => (
+        'The format string used to generate the filter string that queries '
+        . 'membership of section groups. The "%s" token will be replaced with '
+        . 'the Distinguished Name of the group.'
+      ),
+    ];
+
     return parent::buildForm($form,$form_state);
   }
 
@@ -96,6 +117,8 @@ class SettingsForm extends ConfigFormBase {
 
     $entries = [
       'ldap_server' => 'ldap_server',
+      'base_dn' => 'base_dn',
+      'filter' => 'filter',
     ];
 
     foreach ($entries as $formKey => $configKey) {

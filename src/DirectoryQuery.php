@@ -104,6 +104,24 @@ class DirectoryQuery {
   }
 
   private function doQuery(string $baseDN,string $filter,array $options = []) : array {
+
+    // Prepare attribute filter.
+    $attrs = [
+      'name_attr',
+      'email_attr',
+      'title_attr',
+      'phone_attr',
+    ];
+
+    $options['filter'] = [];
+    foreach ($attrs as $name) {
+      $attr = $this->config->get($name);
+      if (empty($attr)) {
+        throw new Exception("Attribute '$name' is not configured");
+      }
+      $options['filter'][] = $attr;
+    }
+
     $response = $this->ldapBridge
               ->get()
               ->query($baseDN,$filter,$options)

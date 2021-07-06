@@ -81,6 +81,42 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
+    $form['name_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Display Name Attribute',
+      '#default_value' => $config->get('name_attr'),
+      '#description' => (
+        'The user display name attribute name.'
+      ),
+    ];
+
+    $form['email_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Email Attribute',
+      '#default_value' => $config->get('email_attr'),
+      '#description' => (
+        'The user email attribute name.'
+      ),
+    ];
+
+    $form['title_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Job Title Attribute',
+      '#default_value' => $config->get('title_attr'),
+      '#description' => (
+        'The user job title attribute name.'
+      ),
+    ];
+
+    $form['phone_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Phone Number Attribute',
+      '#default_value' => $config->get('phone_attr'),
+      '#description' => (
+        'The user phone number attribute name.'
+      ),
+    ];
+
     return parent::buildForm($form,$form_state);
   }
 
@@ -119,6 +155,10 @@ class SettingsForm extends ConfigFormBase {
       'ldap_server' => 'ldap_server',
       'base_dn' => 'base_dn',
       'filter' => 'filter',
+      'name_attr' => 'name_attr',
+      'email_attr' => 'email_attr',
+      'title_attr' => 'title_attr',
+      'phone_attr' => 'phone_attr',
     ];
 
     foreach ($entries as $formKey => $configKey) {

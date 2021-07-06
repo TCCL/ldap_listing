@@ -2,6 +2,7 @@
 
 langcode: "en"
 
+title: 'Staff Directory'
 ldap_server: 'ldap_listing_unset_5a3ab8bf41b4910d7861ee419d24ed32b2d4e6a7'
 base_dn: ''
 filter: '(&(objectClass=inetOrgPerson)(memberOf=%s))'

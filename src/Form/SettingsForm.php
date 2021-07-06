@@ -48,6 +48,15 @@ class SettingsForm extends ConfigFormBase {
       }
     }
 
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => 'Page Title',
+      '#default_value' => $config->get('title'),
+      '#description' => (
+        'The title to display on the LDAP directory listing pages.'
+      ),
+    ];
+
     $form['ldap_server'] = [
       '#type' => 'select',
       '#title' => 'LDAP Server',
@@ -143,6 +152,22 @@ class SettingsForm extends ConfigFormBase {
         );
       }
     }
+
+    // Verify fields that should be non-empty.
+
+    $nonEmpty = [
+      'title',
+    ];
+
+    foreach ($nonEmpty as $field) {
+      $value = $form_state->getValue($field);
+      if (empty($value)) {
+        $form_state->setErrorByName(
+          $field,
+          'Field cannot be empty'
+        );
+      }
+    }
   }
 
   /**
@@ -152,6 +177,7 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config(self::CONFIG_OBJECT);
 
     $entries = [
+      'title' => 'title',
       'ldap_server' => 'ldap_server',
       'base_dn' => 'base_dn',
       'filter' => 'filter',

@@ -71,6 +71,8 @@ class DirectoryPage extends ControllerBase {
       ],
     ];
 
+    error_log(var_export($info,true));
+
     return $render;
   }
 

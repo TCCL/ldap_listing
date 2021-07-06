@@ -5,5 +5,150 @@
  */
 
 .ldap-listing-directory-listing {
-  background-color: red;
+
+}
+
+.ldap-listing-directory-listing > .directory-listing-sections {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+{
+  flex: 1 0 50%;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  > .directory-listing-section
+{
+  margin: 5px;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .heading
+{
+  background-color: #eee;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 10px 0 10px 5px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+{
+  margin: 15px 7.5px 15px 15px;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: baseline;
+  border-bottom: 1px solid #eee;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry:last-child
+{
+  border-bottom: none;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item
+{
+  flex: 0.25;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item.nowrap
+{
+  white-space: nowrap;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item:first-child
+{
+  font-weight: bold;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+{
+  margin: 7.5px;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry
+{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #eee;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry:last-child
+{
+  border-bottom: none;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry
+  > .user-entry-item
+{
+  flex: 1 0 33.33%;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry
+  > .phone
+{
+  text-align: right;
 }

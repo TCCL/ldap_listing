@@ -6,5 +6,56 @@
 #}
 
 <div class="ldap-listing-directory-listing">
-  <p>Hello, World!</p>
+  <div class="directory-listing-sections">
+    {% for section in index %}
+      <div class="directory-listing-section-wrapper">
+        <div class="directory-listing-section">
+          <div class="heading">
+            <span class="label">{{ section.label }}</span>
+            {% if section.abbrev %}
+              <span> (<span class="abbrev">{{ section.abbrev }}</span>)</span>
+            {% endif %}
+          </div>
+
+          {% if section.header %}
+            <div class="header header-footer">
+              {% for entry in section.header %}
+                <div class="entry">
+                  {% for item in entry %}
+                    <div class="entry-item">{{ item }}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="body">
+            {% for user in section.body %}
+              <div class="user-entry">
+                <div class="name user-entry-item"><a href="{{ user.emailLink }}">{{ user.name }}</a></div>
+                <div class="title user-entry-item">{{ user.title }}</div>
+                <div class="phone user-entry-item">{{ user.phone }}</div>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if section.footer %}
+            <div class="footer header-footer">
+              {% for entry in section.footer %}
+                <div class="entry">
+                  {% for item in entry %}
+                    {% if not loop.last and entry[loop.index0+1] is null %}
+                    <div class="entry-item nowrap">{{ item }}</div>
+                    {% else %}
+                    <div class="entry-item">{{ item }}</div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>

@@ -11,6 +11,7 @@ namespace Drupal\ldap_listing;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
+use Symfony\Component\Ldap\Entry;
 
 class DirectoryQuery {
   private $config;
@@ -130,6 +131,14 @@ class DirectoryQuery {
     $header = $section->get('header_entries');
     $footer = $section->get('footer_entries');
 
+    // Sort body elements by name.
+    usort($body,function(array $a,array $b) {
+      return strcmp($a['name'],$b['name']);
+    });
+
+    self::padLists($header);
+    self::padLists($footer);
+
     return [
       'id' => $section->get('id'),
       'label' => $section->get('label'),
@@ -145,27 +154,62 @@ class DirectoryQuery {
 
     // Prepare attribute filter.
     $attrs = [
-      'name_attr',
-      'email_attr',
-      'title_attr',
-      'phone_attr',
+      'name_attr' => 'name',
+      'email_attr' => 'email',
+      'title_attr' => 'title',
+      'phone_attr' => 'phone',
     ];
 
+    $attrMap = [];
+
     $options['filter'] = [];
-    foreach ($attrs as $name) {
-      $attr = $this->config->get($name);
+    foreach ($attrs as $key => $name) {
+      $attr = $this->config->get($key);
       if (empty($attr)) {
-        throw new Exception("Attribute '$name' is not configured");
+        throw new Exception("Attribute '$key' is not configured");
       }
+      $attrMap[$attr] = $name;
       $options['filter'][] = $attr;
     }
 
-    $response = $this->ldapBridge
-              ->get()
-              ->query($baseDN,$filter,$options)
-              ->execute()
-              ->toArray();
+    $entries = $this->ldapBridge
+             ->get()
+             ->query($baseDN,$filter,$options)
+             ->execute()
+             ->toArray();
 
-    return $response;
+    $result = array_map(
+      function(Entry $entry) use($attrMap) {
+        $attributes = [];
+        foreach ($entry->getAttributes() as $name => list($value)) {
+          $attributes[$attrMap[$name]] = $value;
+        }
+
+        return [
+          'dn' => $entry->getDn(),
+          'emailLink' => "mailto:{$attributes['email']}",
+
+        ] + $attributes;
+      },
+      $entries
+    );
+
+    return $result;
+  }
+
+  private static function padLists(array &$list) : void {
+    $max = 0;
+    foreach ($list as $sublist) {
+      if (count($sublist) > $max) {
+        $max = count($sublist);
+      }
+    }
+
+    foreach ($list as &$sublist) {
+      while (count($sublist) < $max) {
+        $sublist[] = null;
+      }
+    }
+    unset($sublist);
   }
 }

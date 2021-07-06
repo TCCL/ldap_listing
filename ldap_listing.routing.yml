@@ -7,3 +7,11 @@ ldap_listing.settings_page:
     _title: 'LDAP Directory Listing Settings'
   requirements:
     _permission: 'administer ldap_listing'
+
+ldap_listing.directory_page:
+  path: '/ldap_listing/directory'
+  defaults:
+    _controller: '\Drupal\ldap_listing\Controller\DirectoryPage::getContent'
+    _title_callback: '\Drupal\ldap_listing\Controller\DirectoryPage::getTitle'
+  requirements:
+    _permission: 'access content'

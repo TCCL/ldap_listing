@@ -125,6 +125,13 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() : int {
+    return $this->weight ?? 0;
+  }
+
   private static function makeTextFromEntries($entries) : string {
     if (!is_array($entries)) {
       return '';

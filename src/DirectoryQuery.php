@@ -77,6 +77,35 @@ class DirectoryQuery {
   }
 
   /**
+   * Queries all directory listing sections. Sections are ordered by their
+   * configured weighting.
+   *
+   * @return array
+   */
+  public function queryAll() : array {
+    $sections = $this->storage->getQuery()->execute();
+
+    $results = [];
+    foreach ($sections as $sectionId) {
+      $result = $this->querySection($sectionId);
+      if ($result === false) {
+        continue;
+      }
+      $results[] = $result;
+    }
+
+    // Sort by configured weighting.
+    usort(
+      $results,
+      function(array $a,array $b) {
+        return $a['weight'] - $b['weight'];
+      }
+    );
+
+    return $results;
+  }
+
+  /**
    * Performs an LDAP query to obtain the information for the indicated section.
    *
    * @param string $sectionId
@@ -100,7 +129,19 @@ class DirectoryQuery {
       return false;
     }
 
-    return $this->doQuery($baseDN,$filter);
+    $body = $this->doQuery($baseDN,$filter);
+    $header = $section->get('header_entries');
+    $footer = $section->get('footer_entries');
+
+    return [
+      'id' => $section->get('id'),
+      'label' => $section->get('label'),
+      'abbrev' => $section->get('abbrev'),
+      'header' => $header,
+      'body' => $body,
+      'footer' => $footer,
+      'weight' => $section->getWeight(),
+    ];
   }
 
   private function doQuery(string $baseDN,string $filter,array $options = []) : array {

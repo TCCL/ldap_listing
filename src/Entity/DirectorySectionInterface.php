@@ -42,4 +42,9 @@ interface DirectorySectionInterface extends ConfigEntityInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
    */
   public function setFooterEntriesFromText(string $text);
+
+  /**
+   * @return int
+   */
+  public function getWeight() : int;
 }

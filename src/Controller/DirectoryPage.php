@@ -64,7 +64,11 @@ class DirectoryPage extends ControllerBase {
     }
 
     $render = [
-      '#markup' => 'Hello, World!',
+      '#theme' => 'ldap_listing_directory_listing',
+      '#index' => $info,
+      '#attached' => [
+        'library' => ['ldap_listing/directory-listing'],
+      ],
     ];
 
     return $render;

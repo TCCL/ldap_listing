@@ -1,0 +1,7 @@
+## ldap_listing.libraries.yml
+
+directory-listing:
+  version: 1.x
+  css:
+    theme:
+      css/directory-listing.css: {}

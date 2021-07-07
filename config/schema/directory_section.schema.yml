@@ -1,0 +1,35 @@
+ldap_listing.directory_section.*:
+  type: config_entity
+  label: 'Directory Listing Section config'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name for this directory listing section configuration'
+    uuid:
+      type: string
+    label:
+      type: string
+      label: 'Display name for section'
+    abbrev:
+      type: string
+      label: 'Abbreviation'
+    group_dn:
+      type: string
+      label: 'DN of LDAP group'
+    header_entries:
+      type: sequence
+      label: 'List of additional entries to display in the header'
+      sequence:
+        type: sequence
+        sequence:
+          type: string
+    footer_entries:
+      type: sequence
+      label: 'List of additional entries to display in the footer'
+      sequence:
+        type: sequence
+        sequence:
+          type: string
+    weight:
+      type: integer
+      label: 'Weight'

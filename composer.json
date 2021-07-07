@@ -1,0 +1,16 @@
+{
+    "name": "tccl/ldap_listing",
+    "description": "Provides a user directory listing compiled from LDAP server entities",
+    "type": "drupal-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roger Gee",
+            "email": "roger.gee@tulsalibrary.org"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "ext-ctype": "*"
+    }
+}

@@ -1,0 +1,7 @@
+## ldap_listing.links.action.yml
+
+entity.ldap_listing_directory_section.add_form:
+  route_name: entity.ldap_listing_directory_section.add_form
+  title: 'Add New Section'
+  appears_on:
+    - entity.ldap_listing_directory_section.collection

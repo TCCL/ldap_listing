@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DirectoryPage extends ControllerBase {
+  const CACHE_TAG = 'LDAP_LISTING_DIRECTORY_PAGE_CACHE';
+
   /**
    * {@inheritdoc}
    */
@@ -69,9 +71,12 @@ class DirectoryPage extends ControllerBase {
       '#attached' => [
         'library' => ['ldap_listing/directory-listing'],
       ],
+      '#cache' => [
+        'tags' => [
+          self::CACHE_TAG,
+        ],
+      ],
     ];
-
-    error_log(var_export($info,true));
 
     return $render;
   }

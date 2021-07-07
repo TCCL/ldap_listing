@@ -8,8 +8,10 @@
 
 namespace Drupal\ldap_listing\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\ldap_listing\Controller\DirectoryPage;
 
 class SettingsForm extends ConfigFormBase {
   const CONFIG_OBJECT = 'ldap_listing.settings';
@@ -194,5 +196,7 @@ class SettingsForm extends ConfigFormBase {
     $config->save();
 
     parent::submitForm($form,$form_state);
+
+    Cache::invalidateTags([DirectoryPage::CACHE_TAG]);
   }
 }

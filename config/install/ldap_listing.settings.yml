@@ -10,3 +10,4 @@ name_attr: ''
 email_attr: ''
 title_attr: ''
 phone_attr: ''
+invalidate_time: 86400

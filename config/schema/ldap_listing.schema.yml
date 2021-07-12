@@ -1,0 +1,31 @@
+ldap_listing.settings:
+  type: config_object
+  label: 'LDAP Directory Listing Settings'
+  mapping:
+    title:
+      type: text
+      label: 'The title for the directory page'
+    ldap_server:
+      type: text
+      label: 'The ID of the LDAP server to utilize'
+    base_dn:
+      type: text
+      label: 'The base DN to search for users in groups'
+    filter:
+      type: text
+      label: 'LDAP filter for user member of group'
+    name_attr:
+      type: text
+      label: 'The user name LDAP attribute name'
+    email_attr:
+      type: text
+      label: 'The email address LDAP attribute name'
+    title_attr:
+      type: text
+      label: 'The job title LDAP attribute name'
+    phone_attr:
+      type: text
+      label: 'The phone number LDAP attribute name'
+    invalidate_time:
+      type: integer
+      label: 'The number of seconds to cache the directory page'

@@ -8,6 +8,7 @@
 
 namespace Drupal\ldap_listing\Controller;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\ldap_listing\DirectoryQuery;
 use Drupal\ldap_listing\Exception;
@@ -17,6 +18,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DirectoryPage extends ControllerBase {
   const CACHE_TAG = 'LDAP_LISTING_DIRECTORY_PAGE_CACHE';
+
+  /**
+   * Invalidates the directory page render array cache tag if the invalidation
+   * period has elapsed.
+   */
+  public static function invalidateIfElapsed() {
+    $state = \Drupal::state();
+    $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
+
+    $amount = $config->get('invalidate_time');
+    if ($amount <= 0) {
+      // Special case: non-positive amount means do not invalidate.
+      return;
+    }
+    $lastRun = $state->get('ldap_listing_last_cache_invalidate',0);
+    $moment = time() - $amount;
+
+    if ($moment >= $lastRun) {
+      Cache::invalidateTags([DirectoryPage::CACHE_TAG]);
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -59,7 +81,7 @@ class DirectoryPage extends ControllerBase {
 
     try {
       $this->query->bind();
-      $info = $this->query->queryAll();
+      $sections = $this->query->queryAll();
 
     } catch (Exception $ex) {
       throw new NotFoundHttpException;
@@ -67,7 +89,12 @@ class DirectoryPage extends ControllerBase {
 
     $render = [
       '#theme' => 'ldap_listing_directory_listing',
-      '#index' => $info,
+      '#index' => [
+        'sections' => $sections,
+        'lastGeneratedMessage' => (
+          date('F dS \a\t g:i A')
+        )
+      ],
       '#attached' => [
         'library' => ['ldap_listing/directory-listing'],
       ],
@@ -77,6 +104,9 @@ class DirectoryPage extends ControllerBase {
         ],
       ],
     ];
+
+    $state = \Drupal::state();
+    $state->set('ldap_listing_last_cache_invalidate',time());
 
     return $render;
   }

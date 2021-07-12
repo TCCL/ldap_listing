@@ -128,6 +128,22 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
+    $form['invalidate_time'] = [
+      '#type' => 'radios',
+      '#options' => [
+        0 => 'Never',
+        86400 => 'Daily',
+        604800 => 'Weekly',
+        2592000 => 'Every 30 days',
+      ],
+      '#title' => 'Cache Invalidation Interval',
+      '#default_value' => $config->get('invalidate_time'),
+      '#description' => (
+        'The interval of time that elapses before the directory page cache '
+        . 'invalidates.'
+      )
+    ];
+
     return parent::buildForm($form,$form_state);
   }
 
@@ -187,6 +203,7 @@ class SettingsForm extends ConfigFormBase {
       'email_attr' => 'email_attr',
       'title_attr' => 'title_attr',
       'phone_attr' => 'phone_attr',
+      'invalidate_time' => 'invalidate_time',
     ];
 
     foreach ($entries as $formKey => $configKey) {

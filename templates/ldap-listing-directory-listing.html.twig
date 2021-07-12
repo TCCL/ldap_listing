@@ -7,7 +7,7 @@
 
 <div class="ldap-listing-directory-listing">
   <div class="directory-listing-sections">
-    {% for section in index %}
+    {% for section in index.sections %}
       <div class="directory-listing-section-wrapper">
         <div class="directory-listing-section">
           <div class="heading">
@@ -58,4 +58,6 @@
       </div>
     {% endfor %}
   </div>
+
+  <div class="directory-listing-bottom-message">Last generated on {{ index.lastGeneratedMessage }}</div>
 </div>

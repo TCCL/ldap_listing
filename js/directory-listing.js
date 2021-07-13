@@ -1807,19 +1807,56 @@
     const row = jQuery("<div>")
           .addClass("directory-listing-search-result-row");
 
-    row.append(makeCell(entry.item.n));
-    row.append(makeCell(entry.item.j));
-    row.append(makeCell(entry.item.p));
-    row.append(makeCell(entry.item.d));
+    const matchesMap = {};
+    for (let i = 0;i < entry.matches.length;++i) {
+      const match = entry.matches[i];
+      matchesMap[match.key] = match;
+    }
+
+    row.append(makeCell(entry.item.n,matchesMap["n"]));
+    row.append(makeCell(entry.item.j,matchesMap["j"]));
+    row.append(makeCell(entry.item.p,matchesMap["p"]));
+    row.append(makeCell(entry.item.d,matchesMap["d"]));
 
     return row;
   }
 
-  function makeCell(inner) {
+  function makeCell(inner,match) {
     const cell = jQuery("<div>")
           .addClass("directory-listing-search-result-cell");
 
-    cell.append(inner);
+    const elem = jQuery("<span>");
+    if (match) {
+      let p = 0;
+      let i = 0;
+      while (p < inner.length) {
+        let q;
+
+        if (i < match.indices.length && p == match.indices[i][0]) {
+          const bold = jQuery("<b>");
+          q = match.indices[i][1] + 1;
+          bold.append(inner.substring(p,q));
+          elem.append(bold);
+          i += 1;
+        }
+        else {
+          if (i < match.indices.length) {
+            q = match.indices[i][0];
+          }
+          else {
+            q = inner.length;
+          }
+          elem.append(inner.substring(p,q));
+        }
+
+        p = q;
+      }
+    }
+    else {
+      elem.append(inner);
+    }
+
+    cell.append(elem);
 
     return cell;
   }

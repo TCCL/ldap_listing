@@ -11,9 +11,6 @@
 .ldap-listing-directory-listing
   > .directory-listing-top-matter
 {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
   margin: 30px 0 30px 0;
 }
 
@@ -31,7 +28,55 @@
   > .directory-listing-search-box-wrapper
   > .directory-listing-search-box
 {
-  flex: 0 0 75%;
+  flex: 0 0 85%;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-results
+{
+  padding: 10px;
+  margin: 15px 7.5% 0 7.5%;
+  border: 3px solid #eee;
+  border-radius: 10px;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-results:empty
+{
+  visibility: hidden;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-results
+  > .directory-listing-search-result-row
+{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dotted #eee;
+  margin: 5px 0 0 0;
+  padding: 0 0 5px 0;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-results
+  > .directory-listing-search-result-row:last-child
+{
+  border-bottom: none;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-results
+  > .directory-listing-search-result-row
+  > .directory-listing-search-result-cell
+{
+  flex: 0.25;
 }
 
 .ldap-listing-directory-listing

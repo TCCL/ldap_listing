@@ -21,9 +21,31 @@ function delayEvent(fn,ms) {
   return handler;
 }
 
+function makeRow(entry) {
+  const row = jQuery("<div>")
+        .addClass("directory-listing-search-result-row");
+
+  row.append(makeCell(entry.item.n));
+  row.append(makeCell(entry.item.j));
+  row.append(makeCell(entry.item.p));
+  row.append(makeCell(entry.item.d));
+
+  return row;
+}
+
+function makeCell(inner) {
+  const cell = jQuery("<div>")
+        .addClass("directory-listing-search-result-cell");
+
+  cell.append(inner);
+
+  return cell;
+}
+
 jQuery(document).ready(($) => {
   const options = {
     includeScore: true,
+    includeMatches: true,
     keys: [
       {
         name: 'n',
@@ -46,18 +68,31 @@ jQuery(document).ready(($) => {
     ignoreLocation: true
   };
 
-  const manifest = JSON.parse($("#ldap-listing-directory-listing-manifest").html());
+  const $manifest = $("#ldap-listing-directory-listing-manifest");
+  const manifest = JSON.parse($manifest.html());
+  $manifest.remove();
 
   const fuse = new Fuse(manifest,options);
 
+  const $results = $("#ldap-listing-directory-listing-results-region");
   const $search = $("#ldap-listing-directory-listing-search-box");
 
   const handler = delayEvent(
     () => {
-      const text = $search.val();
-      const results = fuse.search(text);
+      $results.empty();
 
-      // TODO: Build results UI
+      const text = $search.val();
+      if (text == "") {
+        return;
+      }
+
+      const results = fuse.search(text);
+      for (let i = 0;i < results.length;++i) {
+        const entry = results[i];
+        const row = makeRow(entry);
+
+        $results.append(row);
+      }
     },
     750
   );

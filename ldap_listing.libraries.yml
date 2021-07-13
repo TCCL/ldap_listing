@@ -5,3 +5,7 @@ directory-listing:
   css:
     theme:
       css/directory-listing.css: {}
+  js:
+    js/directory-listing.js: {}
+  dependencies:
+    - core/jquery

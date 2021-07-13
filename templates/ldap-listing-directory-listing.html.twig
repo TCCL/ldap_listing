@@ -6,6 +6,14 @@
 #}
 
 <div class="ldap-listing-directory-listing">
+  <div class="directory-listing-top-matter">
+    <div class="directory-listing-search-box-wrapper">
+      <input class="directory-listing-search-box" placeholder="Search..." type="search">
+    </div>
+
+    <div class="directory-listing-search-results"></div>
+  </div>
+
   <div class="directory-listing-sections">
     {% for section in index.sections %}
       <div class="directory-listing-section-wrapper">

@@ -8,7 +8,35 @@
 
 }
 
-.ldap-listing-directory-listing > .directory-listing-sections {
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  margin: 30px 0 30px 0;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-box-wrapper
+{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-search-box-wrapper
+  > .directory-listing-search-box
+{
+  flex: 0 0 75%;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+{
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;

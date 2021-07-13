@@ -91,6 +91,7 @@ class DirectoryPage extends ControllerBase {
       '#theme' => 'ldap_listing_directory_listing',
       '#index' => [
         'sections' => $sections,
+        'manifest' => self::createManifestFromSections($sections),
         'lastGeneratedMessage' => (
           date('F dS \a\t g:i A')
         )
@@ -113,5 +114,21 @@ class DirectoryPage extends ControllerBase {
 
   public function getTitle() {
     return $this->config->get('title');
+  }
+
+  private static function createManifestFromSections(array $sections) : array {
+    $manifest = [];
+    foreach ($sections as $section) {
+      foreach ($section['body'] as $entry) {
+        $manifest[] = [
+          'n' => $entry['name'] ?? null,
+          'd' => $section['label'],
+          'j' => $entry['title'] ?? null,
+          'p' => $entry['phone'] ?? null,
+        ];
+      }
+    }
+
+    return $manifest;
   }
 }

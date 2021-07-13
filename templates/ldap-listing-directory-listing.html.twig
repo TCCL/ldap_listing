@@ -8,8 +8,10 @@
 <div class="ldap-listing-directory-listing">
   <div class="directory-listing-top-matter">
     <div class="directory-listing-search-box-wrapper">
-      <input class="directory-listing-search-box" placeholder="Search..." type="search">
+      <input id="ldap-listing-directory-listing-search-box" class="directory-listing-search-box" placeholder="Search name/job/phone/department" type="search">
     </div>
+
+    <script id="ldap-listing-directory-listing-manifest" type="application/json">{{ index.manifest|json_encode()|raw }}</script>
 
     <div class="directory-listing-search-results"></div>
   </div>

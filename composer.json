@@ -9,6 +9,14 @@
             "email": "roger.gee@tulsalibrary.org"
         }
     ],
+    "archive": {
+        "exclude": [
+            "/src-js/",
+            "package.json",
+            "pnpm-lock.yaml",
+            "rollup.config.js"
+        ]
+    },
     "minimum-stability": "stable",
     "require": {
         "ext-ctype": "*"

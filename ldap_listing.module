@@ -7,6 +7,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\ldap_listing\Controller\DirectoryPage;
 
 /**
  * Implements hook_help().
@@ -32,6 +33,13 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function ldap_listing_cron() {
+  DirectoryPage::invalidateIfElapsed();
 }
 
 /**

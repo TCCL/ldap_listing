@@ -6,8 +6,18 @@
 #}
 
 <div class="ldap-listing-directory-listing">
+  <div class="directory-listing-top-matter">
+    <div class="directory-listing-search-box-wrapper">
+      <input id="ldap-listing-directory-listing-search-box" class="directory-listing-search-box" placeholder="Search name/job/phone/department" type="search">
+    </div>
+
+    <script id="ldap-listing-directory-listing-manifest" type="application/json">{{ index.manifest|json_encode()|raw }}</script>
+
+    <div id="ldap-listing-directory-listing-results-region" class="directory-listing-search-results"></div>
+  </div>
+
   <div class="directory-listing-sections">
-    {% for section in index %}
+    {% for section in index.sections %}
       <div class="directory-listing-section-wrapper">
         <div class="directory-listing-section">
           <div class="heading">
@@ -32,7 +42,11 @@
           <div class="body">
             {% for user in section.body %}
               <div class="user-entry">
-                <div class="name user-entry-item"><a href="{{ user.emailLink }}">{{ user.name }}</a></div>
+                {% if user.emailLink %}
+                  <div class="name user-entry-item"><a href="{{ user.emailLink }}">{{ user.name }}</a></div>
+                {% else %}
+                  <div class="name user-entry-item">{{ user.name }}</div>
+                {% endif %}
                 <div class="title user-entry-item">{{ user.title }}</div>
                 <div class="phone user-entry-item">{{ user.phone }}</div>
               </div>
@@ -58,4 +72,6 @@
       </div>
     {% endfor %}
   </div>
+
+  <div class="directory-listing-bottom-message">Last generated on {{ index.lastGeneratedMessage }}</div>
 </div>

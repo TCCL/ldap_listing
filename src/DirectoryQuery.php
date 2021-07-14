@@ -185,9 +185,16 @@ class DirectoryQuery {
           $attributes[$attrMap[$name]] = $value;
         }
 
+        if (!empty($attributes['email'])) {
+          $emailLink = "mailto:{$attributes['email']}";
+        }
+        else {
+          $emailLink = null;
+        }
+
         return [
           'dn' => $entry->getDn(),
-          'emailLink' => "mailto:{$attributes['email']}",
+          'emailLink' => $emailLink,
 
         ] + $attributes;
       },

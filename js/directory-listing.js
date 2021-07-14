@@ -2311,16 +2311,28 @@
       matchesMap[match.key] = match;
     }
 
-    row.append(makeCell(entry.item.n, matchesMap["n"]));
+    var mailto = "";
+
+    if (entry.item.e) {
+      mailto = "mailto:" + entry.item.e;
+    }
+
+    row.append(makeCell(entry.item.n, matchesMap["n"], mailto));
     row.append(makeCell(entry.item.j, matchesMap["j"]));
     row.append(makeCell(entry.item.p, matchesMap["p"]));
     row.append(makeCell(entry.item.d, matchesMap["d"]));
     return row;
   }
 
-  function makeCell(inner, match) {
+  function makeCell(inner, match, href) {
     var cell = jQuery("<div>").addClass("directory-listing-search-result-cell");
-    var elem = jQuery("<span>");
+    var elem;
+
+    if (href) {
+      elem = jQuery("<a>").attr("href", href);
+    } else {
+      elem = jQuery("<span>");
+    }
 
     if (match) {
       var p = 0;

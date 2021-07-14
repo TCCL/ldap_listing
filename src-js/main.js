@@ -31,7 +31,12 @@ function makeRow(entry) {
     matchesMap[match.key] = match;
   }
 
-  row.append(makeCell(entry.item.n,matchesMap["n"]));
+  let mailto = "";
+  if (entry.item.e) {
+    mailto = "mailto:" + entry.item.e;
+  }
+
+  row.append(makeCell(entry.item.n,matchesMap["n"],mailto));
   row.append(makeCell(entry.item.j,matchesMap["j"]));
   row.append(makeCell(entry.item.p,matchesMap["p"]));
   row.append(makeCell(entry.item.d,matchesMap["d"]));
@@ -39,11 +44,18 @@ function makeRow(entry) {
   return row;
 }
 
-function makeCell(inner,match) {
+function makeCell(inner,match,href) {
   const cell = jQuery("<div>")
         .addClass("directory-listing-search-result-cell");
 
-  const elem = jQuery("<span>");
+  let elem;
+  if (href) {
+    elem = jQuery("<a>").attr("href",href);
+  }
+  else {
+    elem = jQuery("<span>");
+  }
+
   if (match) {
     let p = 0;
     let i = 0;

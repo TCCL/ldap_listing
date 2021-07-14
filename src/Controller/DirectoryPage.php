@@ -125,6 +125,7 @@ class DirectoryPage extends ControllerBase {
           'd' => $section['label'],
           'j' => $entry['title'] ?? null,
           'p' => $entry['phone'] ?? null,
+          'e' => $entry['email'] ?? null,
         ];
       }
     }

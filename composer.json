@@ -11,10 +11,10 @@
     ],
     "archive": {
         "exclude": [
-            "/src-js/",
-            "package.json",
-            "pnpm-lock.yaml",
-            "rollup.config.js"
+            "/js/src",
+            "/package.json",
+            "/pnpm-lock.yaml",
+            "/rollup.config.js"
         ]
     },
     "minimum-stability": "stable",

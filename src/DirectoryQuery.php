@@ -8,12 +8,39 @@
 
 namespace Drupal\ldap_listing;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
 use Symfony\Component\Ldap\Entry;
 
 class DirectoryQuery {
+  const CACHE_TAG = 'ldap_listing_directory_query';
+
+  /**
+   * Invalidates the directory query cache if the configured invalidation
+   * interval has elapsed.
+   */
+  public static function invalidateIfElapsed() {
+    $state = \Drupal::state();
+    $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
+
+    $amount = $config->get('invalidate_time');
+    if ($amount <= 0) {
+      // Special case: non-positive amount means do not invalidate.
+      return;
+    }
+    $lastRun = $state->get('ldap_listing_last_cache_invalidate',0);
+    $moment = time() - $amount;
+
+    if ($moment >= $lastRun) {
+      Cache::invalidateTags([DirectoryQuery::CACHE_TAG]);
+    }
+  }
+
+  /**
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
   private $config;
 
   /**
@@ -75,6 +102,44 @@ class DirectoryQuery {
     if (!$this->ldapBridge->bind()) {
       throw new Exception('Cannot bind to LDAP server');
     }
+  }
+
+  /**
+   * Queries all directory listing sections. The query is cached for later
+   * lookup so a future call to this method may retrieve cached data.
+   *
+   * @param int $time
+   * @param bool $forceInvalidate
+   *
+   * @return array
+   */
+  public function queryAllCached(&$time,bool $forceInvalidate = false) : array {
+    $cache = \Drupal::cache();
+
+    $cid = 'ldap_listing:directory_query:' . \Drupal::languageManager()
+         ->getCurrentLanguage()
+         ->getId();
+
+    // Attempt pull from cache if we are not invalidating.
+    if (!$forceInvalidate) {
+      $bucket = $cache->get($cid);
+    }
+
+    if (!isset($bucket) || $bucket === false) {
+      // Query data from LDAP if nothing was pulled from cache.
+      $sections = $this->queryAll();
+      $time = time();
+      $cache->set($cid,$sections,Cache::PERMANENT,[DirectoryQuery::CACHE_TAG]);
+      $state = \Drupal::state();
+      $state->set('ldap_listing_last_cache_invalidate',$time);
+    }
+    else {
+      // Use existing data from cache.
+      $sections = $bucket->data;
+      $time = (int)$bucket->created;
+    }
+
+    return $sections;
   }
 
   /**

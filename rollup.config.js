@@ -4,7 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 
 export default {
-  input: 'src-js/main.js',
+  input: 'js/src/directory-listing.js',
   output: {
     file: 'js/directory-listing.js',
     format: 'iife'

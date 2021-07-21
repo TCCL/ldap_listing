@@ -121,7 +121,11 @@
   > .directory-listing-section-wrapper
   .header-footer
 {
-  margin: 15px 7.5px 15px 15px;
+  margin: 15px 0 15px 25%;
+  display: table;
+  width: 75%;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 .ldap-listing-directory-listing
@@ -130,7 +134,8 @@
   .header-footer
   > .entry
 {
-  display: flex;
+  display: table-row;
+  width: 100%;
   flex-flow: row nowrap;
   justify-content: flex-end;
   align-items: baseline;
@@ -153,7 +158,8 @@
   > .entry
   > .entry-item
 {
-  flex: 0.25;
+  display: table-cell;
+  padding: 0 5px 0 5px;
 }
 
 .ldap-listing-directory-listing

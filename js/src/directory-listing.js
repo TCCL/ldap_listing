@@ -1,4 +1,4 @@
-// main.js
+// directory-listing.js
 
 import Fuse from "fuse.js";
 

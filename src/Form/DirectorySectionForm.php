@@ -5,7 +5,7 @@ namespace Drupal\ldap_listing\Form;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\ldap_listing\Controller\DirectoryPage;
+use Drupal\ldap_listing\DirectoryQuery;
 
 class DirectorySectionForm extends EntityForm {
   /**
@@ -116,7 +116,7 @@ class DirectorySectionForm extends EntityForm {
       ]));
     }
 
-    Cache::invalidateTags([DirectoryPage::CACHE_TAG]);
+    Cache::invalidateTags([DirectoryQuery::CACHE_TAG]);
 
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
   }

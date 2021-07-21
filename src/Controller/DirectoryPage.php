@@ -17,29 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DirectoryPage extends ControllerBase {
-  const CACHE_TAG = 'LDAP_LISTING_DIRECTORY_PAGE_CACHE';
-
-  /**
-   * Invalidates the directory page render array cache tag if the invalidation
-   * period has elapsed.
-   */
-  public static function invalidateIfElapsed() {
-    $state = \Drupal::state();
-    $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
-
-    $amount = $config->get('invalidate_time');
-    if ($amount <= 0) {
-      // Special case: non-positive amount means do not invalidate.
-      return;
-    }
-    $lastRun = $state->get('ldap_listing_last_cache_invalidate',0);
-    $moment = time() - $amount;
-
-    if ($moment >= $lastRun) {
-      Cache::invalidateTags([DirectoryPage::CACHE_TAG]);
-    }
-  }
-
   /**
    * {@inheritdoc}
    */
@@ -81,7 +58,7 @@ class DirectoryPage extends ControllerBase {
 
     try {
       $this->query->bind();
-      $sections = $this->query->queryAll();
+      $sections = $this->query->queryAllCached($time);
 
     } catch (Exception $ex) {
       throw new NotFoundHttpException;
@@ -93,7 +70,7 @@ class DirectoryPage extends ControllerBase {
         'sections' => $sections,
         'manifest' => self::createManifestFromSections($sections),
         'lastGeneratedMessage' => (
-          date('F dS \a\t g:i A')
+          date('F dS \a\t g:i A',$time)
         )
       ],
       '#attached' => [
@@ -101,13 +78,10 @@ class DirectoryPage extends ControllerBase {
       ],
       '#cache' => [
         'tags' => [
-          self::CACHE_TAG,
+          DirectoryQuery::CACHE_TAG,
         ],
       ],
     ];
-
-    $state = \Drupal::state();
-    $state->set('ldap_listing_last_cache_invalidate',time());
 
     return $render;
   }

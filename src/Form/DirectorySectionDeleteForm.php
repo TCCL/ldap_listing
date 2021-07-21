@@ -12,7 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\ldap_listing\Controller\DirectoryPage;
+use Drupal\ldap_listing\DirectoryQuery;
 
 class DirectorySectionDeleteForm extends EntityConfirmFormBase {
   /**
@@ -59,7 +59,7 @@ class DirectorySectionDeleteForm extends EntityConfirmFormBase {
       )
     );
 
-    Cache::invalidateTags([DirectoryPage::CACHE_TAG]);
+    Cache::invalidateTags([DirectoryQuery::CACHE_TAG]);
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

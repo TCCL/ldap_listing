@@ -128,6 +128,28 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
+    $form['manager_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Manager Attribute (Optional)',
+      '#default_value' => $config->get('manager_attr'),
+      '#description' => (
+        'The LDAP field that contains the user manager. (This '
+        . 'field is optional and is used to rank the items in '
+        . 'each section.)'
+      ),
+    ];
+
+    $form['reports_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Reports Attribute (Optional)',
+      '#default_value' => $config->get('reports_attr'),
+      '#description' => (
+        'The LDAP field that contains the user employee reports. (This '
+        . 'field is optional and is used to rank the items in '
+        . 'each section.)'
+      ),
+    ];
+
     $form['invalidate_time'] = [
       '#type' => 'radios',
       '#options' => [
@@ -203,6 +225,8 @@ class SettingsForm extends ConfigFormBase {
       'email_attr' => 'email_attr',
       'title_attr' => 'title_attr',
       'phone_attr' => 'phone_attr',
+      'manager_attr' => 'manager_attr',
+      'reports_attr' => 'reports_attr',
       'invalidate_time' => 'invalidate_time',
     ];
 

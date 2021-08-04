@@ -26,6 +26,12 @@ ldap_listing.settings:
     phone_attr:
       type: text
       label: 'The phone number LDAP attribute name'
+    manager_attr:
+      type: text
+      label: 'The manager LDAP attribute name'
+    reports_attr:
+      type: text
+      label: 'The direct reports LDAP attribute name'
     invalidate_time:
       type: integer
       label: 'The number of seconds to cache the directory page'

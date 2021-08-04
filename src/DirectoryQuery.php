@@ -196,11 +196,6 @@ class DirectoryQuery {
     $header = $section->get('header_entries');
     $footer = $section->get('footer_entries');
 
-    // Sort body elements by name.
-    usort($body,function(array $a,array $b) {
-      return strcmp($a['name'],$b['name']);
-    });
-
     self::padLists($header);
     self::padLists($footer);
 
@@ -225,6 +220,11 @@ class DirectoryQuery {
       'phone_attr' => 'phone',
     ];
 
+    $optionalAttrs = [
+      'manager_attr' => 'manager',
+      'reports_attr' => 'reports',
+    ];
+
     $attrMap = [];
 
     $options['filter'] = [];
@@ -236,6 +236,14 @@ class DirectoryQuery {
       $attrMap[$attr] = $name;
       $options['filter'][] = $attr;
     }
+    foreach ($optionalAttrs as $key => $name) {
+      $attr = $this->config->get($key);
+      if (empty($attr)) {
+        continue;
+      }
+      $attrMap[$attr] = $name;
+      $options['filter'][] = $attr;
+    }
 
     $entries = $this->ldapBridge
              ->get()
@@ -243,11 +251,18 @@ class DirectoryQuery {
              ->execute()
              ->toArray();
 
+    $group = [];
+
     $result = array_map(
-      function(Entry $entry) use($attrMap) {
+      function(Entry $entry) use($attrMap,&$group) {
         $attributes = [];
-        foreach ($entry->getAttributes() as $name => list($value)) {
-          $attributes[$attrMap[$name]] = $value;
+        foreach ($entry->getAttributes() as $name => $values) {
+          if (count($values) == 1) {
+            $attributes[$attrMap[$name]] = $values[0];
+          }
+          else {
+            $attributes[$attrMap[$name]] = $values;
+          }
         }
 
         if (!empty($attributes['email'])) {
@@ -257,14 +272,57 @@ class DirectoryQuery {
           $emailLink = null;
         }
 
+        $dn = $entry->getDn();
+        $group[$dn] = true;
+
         return [
-          'dn' => $entry->getDn(),
+          'dn' => $dn,
           'emailLink' => $emailLink,
+          'rank' => 0,
 
         ] + $attributes;
       },
       $entries
     );
+
+    if (!empty($optionalAttrs)) {
+      array_walk($result,function(array &$entry) use($optionalAttrs,$group) {
+        $manager = $entry['manager'] ?? null;
+        $reports = $entry['reports'] ?? [];
+
+        foreach ($optionalAttrs as $name) {
+          unset($entry[$name]);
+        }
+
+        if (!is_array($reports)) {
+          $reports = [$reports];
+        }
+
+        if (!empty($manager)) {
+          $entry['rank'] -= array_key_exists($manager,$group);
+        }
+
+        if (!empty($reports)) {
+          $reportsInGroup = array_reduce(
+            $reports,
+            function($carry,$item) use($group) {
+              return $carry + array_key_exists($item,$group);
+            },
+            0
+          );
+
+          $entry['rank'] += ( $reportsInGroup > 0 );
+        }
+      });
+
+      usort($result,function(array $a,array $b) {
+        if ($a['rank'] != $b['rank']) {
+          return $b['rank'] - $a['rank'];
+        }
+
+        return strcmp($a['name'],$b['name']);
+      });
+    }
 
     return $result;
   }

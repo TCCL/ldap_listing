@@ -114,29 +114,14 @@ class DirectoryQuery {
    * @return array
    */
   public function queryAllCached(&$time,bool $forceInvalidate = false) : array {
-    $cache = \Drupal::cache();
-
-    $cid = 'ldap_listing:directory_query:' . \Drupal::languageManager()
-         ->getCurrentLanguage()
-         ->getId();
-
-    // Attempt pull from cache if we are not invalidating.
     if (!$forceInvalidate) {
-      $bucket = $cache->get($cid);
+      $sections = $this->getCached($time);
     }
 
-    if (!isset($bucket) || $bucket === false) {
+    if (!isset($sections)) {
       // Query data from LDAP if nothing was pulled from cache.
       $sections = $this->queryAll();
-      $time = time();
-      $cache->set($cid,$sections,Cache::PERMANENT,[DirectoryQuery::CACHE_TAG]);
-      $state = \Drupal::state();
-      $state->set('ldap_listing_last_cache_invalidate',$time);
-    }
-    else {
-      // Use existing data from cache.
-      $sections = $bucket->data;
-      $time = (int)$bucket->created;
+      $this->setCached($time,$sections);
     }
 
     return $sections;
@@ -208,6 +193,61 @@ class DirectoryQuery {
       'footer' => $footer,
       'weight' => $section->getWeight(),
     ];
+  }
+
+  /**
+   * Queries directory section information. If the information is in the cache,
+   * then the cached version is returned. Otherwise the information is queried
+   * directly from the LDAP server.
+   *
+   * @param string $sectionId
+   * @param bool $forceInvalidate
+   *
+   * @return array
+   */
+  public function querySectionCached(string $sectionId,
+                                     bool $forceInvalidate = false) : array
+  {
+    // See if we have the section in the cache.
+    if (!$forceInvalidate) {
+      $sections = $this->getCached($time);
+      if (isset($sections) && is_array($sections)) {
+        $ids = array_column($sections,'id');
+        $key = array_search($sectionId,$ids);
+        if ($key !== false) {
+          return $sections[$key];
+        }
+      }
+    }
+
+    return $this->querySection($sectionId);
+  }
+
+  private function getCached(&$time) : ?array {
+    $cache = \Drupal::cache();
+    $cid = self::makeCacheId();
+
+    // Attempt pull from cache if we are not invalidating.
+    $bucket = $cache->get($cid);
+
+    if (isset($bucket) && is_array($bucket)) {
+      // Pull data from cache bucket.
+      $time = (int)$bucket->created;
+      return $bucket->data;
+    }
+
+    return null;
+  }
+
+  private function setCached(&$time,array $sections) : void {
+    $cache = \Drupal::cache();
+    $cid = self::makeCacheId();
+    $time = time();
+
+    $cache->set($cid,$sections,Cache::PERMANENT,[DirectoryQuery::CACHE_TAG]);
+
+    $state = \Drupal::state();
+    $state->set('ldap_listing_last_cache_invalidate',$time);
   }
 
   private function doQuery(string $baseDN,string $filter,array $options = []) : array {
@@ -341,5 +381,16 @@ class DirectoryQuery {
       }
     }
     unset($sublist);
+  }
+
+  private static function makeCacheId() : string {
+    static $cid;
+    if (!isset($cid)) {
+      $cid = 'ldap_listing:directory_query:' . \Drupal::languageManager()
+           ->getCurrentLanguage()
+           ->getId();
+    }
+
+    return $cid;
   }
 }

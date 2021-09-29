@@ -106,6 +106,9 @@
 .ldap-listing-directory-listing
   > .directory-listing-sections
   > .directory-listing-section-wrapper
+  .heading,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
   .heading
 {
   background-color: #eee;
@@ -119,6 +122,9 @@
 .ldap-listing-directory-listing
   > .directory-listing-sections
   > .directory-listing-section-wrapper
+  .header-footer,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
   .header-footer
 {
   margin: 15px 0 15px 25%;
@@ -130,6 +136,10 @@
 
 .ldap-listing-directory-listing
   > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry,
+.ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper
   .header-footer
   > .entry
@@ -146,6 +156,10 @@
   > .directory-listing-sections
   > .directory-listing-section-wrapper
   .header-footer
+  > .entry:last-child,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .header-footer
   > .entry:last-child
 {
   border-bottom: none;
@@ -153,6 +167,11 @@
 
 .ldap-listing-directory-listing
   > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item,
+.ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper
   .header-footer
   > .entry
@@ -167,13 +186,23 @@
   > .directory-listing-section-wrapper
   .header-footer
   > .entry
-  > .entry-item.nowrap
+  > .entry-item.nowrap,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item:nowrap
 {
   white-space: nowrap;
 }
 
 .ldap-listing-directory-listing
   > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .header-footer
+  > .entry
+  > .entry-item:first-child,
+.ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper
   .header-footer
   > .entry
@@ -185,6 +214,9 @@
 .ldap-listing-directory-listing
   > .directory-listing-sections
   > .directory-listing-section-wrapper
+  .body,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
   .body
 {
   margin: 7.5px;
@@ -192,6 +224,10 @@
 
 .ldap-listing-directory-listing
   > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry,
+.ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper
   .body
   > .user-entry
@@ -207,6 +243,10 @@
   > .directory-listing-sections
   > .directory-listing-section-wrapper
   .body
+  > .user-entry:last-child,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .body
   > .user-entry:last-child
 {
   border-bottom: none;
@@ -217,6 +257,11 @@
   > .directory-listing-section-wrapper
   .body
   > .user-entry
+  > .user-entry-item,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry
   > .user-entry-item
 {
   flex: 1 0 33.33%;
@@ -224,6 +269,11 @@
 
 .ldap-listing-directory-listing
   > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .user-entry
+  > .phone,
+.ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper
   .body
   > .user-entry

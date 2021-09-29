@@ -32,6 +32,11 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
         'index' => null,
       ],
     ],
+    'ldap_listing_directory_listing_field' => [
+      'variables' => [
+        'section' => null,
+      ],
+    ],
   ];
 }
 

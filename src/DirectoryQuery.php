@@ -16,6 +16,19 @@ use Symfony\Component\Ldap\Entry;
 
 class DirectoryQuery {
   const CACHE_TAG = 'ldap_listing_directory_query';
+  const MAX_RECURSIVE_DEPTH = 10000;
+
+  private static $ATTRS = [
+    'name_attr' => 'name',
+    'email_attr' => 'email',
+    'title_attr' => 'title',
+    'phone_attr' => 'phone',
+  ];
+
+  private static $OPTIONAL_ATTRS = [
+    'manager_attr' => 'manager',
+    'reports_attr' => 'reports',
+  ];
 
   /**
    * Invalidates the directory query cache if the configured invalidation
@@ -64,6 +77,13 @@ class DirectoryQuery {
   private $ldapServer;
 
   /**
+   * Cached attribute map.
+   *
+   * @var array
+   */
+  private $attrMap = [];
+
+  /**
    * Creates a new DirectoryQuery instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -81,6 +101,22 @@ class DirectoryQuery {
     $this->ldapServer = $entityTypeManager
                       ->getStorage('ldap_server')
                       ->load($serverId);
+
+    // Prepare attribute map.
+    foreach (self::$ATTRS as $key => $name) {
+      $attr = $this->config->get($key);
+      if (empty($attr)) {
+        throw new Exception("Attribute '$key' is not configured");
+      }
+      $this->attrMap[$attr] = $name;
+    }
+    foreach (self::$OPTIONAL_ATTRS as $key => $name) {
+      $attr = $this->config->get($key);
+      if (empty($attr)) {
+        continue;
+      }
+      $this->attrMap[$attr] = $name;
+    }
   }
 
   /**
@@ -169,7 +205,8 @@ class DirectoryQuery {
     // formatting the section group DN using the configured filter format.
     $baseDN = $this->config->get('base_dn');
     $filterFormat = $this->config->get('filter');
-    $filter = sprintf($filterFormat,$section->get('group_dn'));
+    $groupDN = $section->get('group_dn');
+    $filter = sprintf($filterFormat,$groupDN);
 
     if (empty($baseDN) || empty($filter)) {
       throw new Exception(
@@ -177,7 +214,37 @@ class DirectoryQuery {
       );
     }
 
-    $body = $this->doQuery($baseDN,$filter);
+    // Perform initial query.
+
+    $options['filter'] = array_keys($this->attrMap);
+    $entries = $this->doQuery($baseDN,$filter,$options);
+
+    // Perform recursive queries if configured.
+
+    $depth = $section->get('depth');
+    if ($depth < 1) {
+      $depth = self::MAX_RECURSIVE_DEPTH;
+    }
+
+    $groupBaseDN = $this->config->get('group_base_dn');
+    $groupFilterFormat = $this->config->get('group_filter');
+    if ($depth > 1 && !empty($groupBaseDN) && !empty($groupFilterFormat)) {
+      $subEntries = $this->recurseSubgroups(
+        $groupBaseDN,
+        $baseDN,
+        $groupDN,
+        $groupFilterFormat,
+        $filterFormat,
+        $options,
+        $depth
+      );
+
+      $entries = array_merge($entries,$subEntries);
+    }
+
+    // Format entries; extract and format header/footer information.
+
+    $body = $this->formatUserEntries($entries);
     $header = $section->get('header_entries');
     $footer = $section->get('footer_entries');
 
@@ -251,57 +318,63 @@ class DirectoryQuery {
   }
 
   private function doQuery(string $baseDN,string $filter,array $options = []) : array {
-
-    // Prepare attribute filter.
-    $attrs = [
-      'name_attr' => 'name',
-      'email_attr' => 'email',
-      'title_attr' => 'title',
-      'phone_attr' => 'phone',
-    ];
-
-    $optionalAttrs = [
-      'manager_attr' => 'manager',
-      'reports_attr' => 'reports',
-    ];
-
-    $attrMap = [];
-
-    $options['filter'] = [];
-    foreach ($attrs as $key => $name) {
-      $attr = $this->config->get($key);
-      if (empty($attr)) {
-        throw new Exception("Attribute '$key' is not configured");
-      }
-      $attrMap[$attr] = $name;
-      $options['filter'][] = $attr;
-    }
-    foreach ($optionalAttrs as $key => $name) {
-      $attr = $this->config->get($key);
-      if (empty($attr)) {
-        continue;
-      }
-      $attrMap[$attr] = $name;
-      $options['filter'][] = $attr;
-    }
-
     $entries = $this->ldapBridge
              ->get()
              ->query($baseDN,$filter,$options)
              ->execute()
              ->toArray();
 
+    return $entries;
+  }
+
+  private function recurseSubgroups(
+    string $groupBaseDN,
+    string $userBaseDN,
+    string $groupDN,
+    string $groupFilterFormat,
+    string $userFilterFormat,
+    array $userOptions,
+    int $maxDepth) : array
+  {
+    $entries = [];
+
+    $depth = 1;
+    $stk = [$groupDN];
+
+    while ($depth < $maxDepth && !empty($stk)) {
+      // Query subgroups.
+      $groupFilter = sprintf($groupFilterFormat,array_pop($stk));
+      $subgroups = $this->doQuery($groupBaseDN,$groupFilter);
+      if (empty($subgroups)) {
+        break;
+      }
+
+      foreach ($subgroups as $entry) {
+        $dn = $entry->getDn();
+        $userFilter = sprintf($userFilterFormat,ldap_escape($dn,'',LDAP_ESCAPE_FILTER));
+        $next = $this->doQuery($userBaseDN,$userFilter,$userOptions);
+        $entries = array_merge($entries,$next);
+        array_push($stk,$dn);
+      }
+
+      $depth += 1;
+    }
+
+    return $entries;
+  }
+
+  private function formatUserEntries(array $entries) {
     $group = [];
 
     $result = array_map(
-      function(Entry $entry) use($attrMap,&$group) {
+      function(Entry $entry) use(&$group) {
         $attributes = [];
         foreach ($entry->getAttributes() as $name => $values) {
           if (count($values) == 1) {
-            $attributes[$attrMap[$name]] = $values[0];
+            $attributes[$this->attrMap[$name]] = $values[0];
           }
           else {
-            $attributes[$attrMap[$name]] = $values;
+            $attributes[$this->attrMap[$name]] = $values;
           }
         }
 

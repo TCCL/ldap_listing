@@ -76,8 +76,16 @@ class SettingsForm extends ConfigFormBase {
       '#title' => 'Base DN',
       '#default_value' => $config->get('base_dn'),
       '#description' => (
-        'The base Distinguished Name that identifies the root of the '
-        . 'user directory'
+        'The base Distinguished Name for a user search'
+      ),
+    ];
+
+    $form['group_base_dn'] = [
+      '#type' => 'textfield',
+      '#title' => 'Group Base DN',
+      '#default_value' => $config->get('group_base_dn'),
+      '#description' => (
+        'The base Distinguished Name for a group search'
       ),
     ];
 
@@ -89,6 +97,18 @@ class SettingsForm extends ConfigFormBase {
         'The format string used to generate the filter string that queries '
         . 'membership of section groups. The "%s" token will be replaced with '
         . 'the Distinguished Name of the group.'
+      ),
+    ];
+
+    $form['group_filter'] = [
+      '#type' => 'textfield',
+      '#title' => 'Group Filter Format',
+      '#default_value' => $config->get('group_filter'),
+      '#description' => (
+        'The format string used to generate the filter string that queries '
+        . 'subgroups within section groups. The "%s" token will be replaced with '
+        . 'the Distinguished Name of the group. This is only used when a section has '
+        . 'a configured recursive depth.'
       ),
     ];
 
@@ -220,7 +240,9 @@ class SettingsForm extends ConfigFormBase {
       'title' => 'title',
       'ldap_server' => 'ldap_server',
       'base_dn' => 'base_dn',
+      'group_base_dn' => 'group_base_dn',
       'filter' => 'filter',
+      'group_filter' => 'group_filter',
       'name_attr' => 'name_attr',
       'email_attr' => 'email_attr',
       'title_attr' => 'title_attr',

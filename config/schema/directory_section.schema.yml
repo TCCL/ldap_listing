@@ -16,6 +16,9 @@ ldap_listing.directory_section.*:
     group_dn:
       type: string
       label: 'DN of LDAP group'
+    depth:
+      type: integer
+      label: 'Recursive depth for handling subgroups'
     header_entries:
       type: sequence
       label: 'List of additional entries to display in the header'

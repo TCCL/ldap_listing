@@ -11,9 +11,15 @@ ldap_listing.settings:
     base_dn:
       type: text
       label: 'The base DN to search for users in groups'
+    group_base_dn:
+      type: text
+      label: 'The group base DN to search for subgroups'
     filter:
       type: text
       label: 'LDAP filter for user member of group'
+    group_filter:
+      type: text
+      label: 'LDAP filter for group member of group'
     name_attr:
       type: text
       label: 'The user name LDAP attribute name'

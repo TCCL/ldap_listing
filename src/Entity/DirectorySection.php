@@ -48,6 +48,7 @@ use Drupal\ldap_listing\Support\LineParser;
  *     "label",
  *     "abbrev",
  *     "group_dn",
+ *     "depth",
  *     "header_entries",
  *     "footer_entries",
  *     "weight"

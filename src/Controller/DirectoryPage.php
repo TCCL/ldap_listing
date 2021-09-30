@@ -70,7 +70,7 @@ class DirectoryPage extends ControllerBase {
         'sections' => $sections,
         'manifest' => self::createManifestFromSections($sections),
         'lastGeneratedMessage' => (
-          date('F dS \a\t g:i A',$time)
+          date('F jS \a\t g:i A',$time)
         )
       ],
       '#attached' => [

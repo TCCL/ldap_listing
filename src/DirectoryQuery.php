@@ -398,12 +398,15 @@ class DirectoryQuery {
       $entries
     );
 
-    if (!empty($optionalAttrs)) {
-      array_walk($result,function(array &$entry) use($optionalAttrs,$group) {
+    $keep = array_keys(array_unique(array_column($result,'dn')));
+    $result = array_intersect_key($result,$keep);
+
+    if (!empty(self::$OPTIONAL_ATTRS)) {
+      array_walk($result,function(array &$entry) use($group) {
         $manager = $entry['manager'] ?? null;
         $reports = $entry['reports'] ?? [];
 
-        foreach ($optionalAttrs as $name) {
+        foreach (self::$OPTIONAL_ATTRS as $name) {
           unset($entry[$name]);
         }
 

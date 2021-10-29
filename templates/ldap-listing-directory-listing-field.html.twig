@@ -30,11 +30,12 @@
       <div class="body">
         {% for user in section.body %}
           <div class="user-entry">
-            {% if user.emailLink %}
-              <div class="name user-entry-item"><a href="{{ user.emailLink }}">{{ user.name }}</a></div>
-            {% else %}
-              <div class="name user-entry-item">{{ user.name }}</div>
-            {% endif %}
+            <div class="name user-entry-item">
+              <span>{{ user.name }}</span>
+              {% if user.emailLink %}
+                <a href="{{ user.emailLink }}" class="mail-link" title="Create email">✉</a>
+              {% endif %}
+            </div>
             <div class="title user-entry-item">{{ user.title }}</div>
             <div class="phone user-entry-item">{{ user.phone }}</div>
           </div>

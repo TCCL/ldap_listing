@@ -39,7 +39,7 @@ class DirectorySectionFieldFormatter extends FormatterBase {
       $elements[$index] = [
         '#theme' => 'ldap_listing_directory_listing_field',
         '#attached' => [
-          'library' => ['ldap_listing/directory-listing'],
+          'library' => ['ldap_listing/directory-listing-no-js'],
         ],
         '#cache' => [
           'tags' => [

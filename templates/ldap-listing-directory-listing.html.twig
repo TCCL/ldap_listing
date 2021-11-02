@@ -46,7 +46,7 @@
                   <span>{{ user.name }}</span>
                   {% if user.emailLink %}
                     <div class="mail-link-wrapper">
-                      <a href="{{ user.emailLink }}" class="mail-link" title="Create email">✉</a>
+                      <a href="{{ user.emailLink }}" class="mail-link" title="{{ user.email }}">✉</a>
                     </div>
                   {% endif %}
                 </div>

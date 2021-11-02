@@ -12,6 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ldap_listing\DirectoryQuery;
+use Drupal\ldap_listing\Support\EntryParser;
 
 class SettingsForm extends ConfigFormBase {
   const CONFIG_OBJECT = 'ldap_listing.settings';
@@ -183,7 +184,31 @@ class SettingsForm extends ConfigFormBase {
       '#description' => (
         'The interval of time that elapses before the directory page cache '
         . 'invalidates.'
-      )
+      ),
+    ];
+
+    $form['link_to_user_page'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Link to User Profile Page',
+      '#default_value' => $config->get('link_to_user_page'),
+      '#description' => (
+        'If enabled, user entries in the directory listing will link to '
+        . 'user profile pages if the entry can be mapped to a Drupal user.'
+      ),
+    ];
+
+    $parser = new EntryParser($config->get('user_page_attributes'));
+    $form['user_page_attributes'] = [
+      '#type' => 'textarea',
+      '#title' => 'User Profile Page Attributes',
+      '#default_value' => $parser->makeText(),
+      '#description' => (
+        'The list of LDAP attributes to fetch and render on the user profile '
+        . 'page if enabled. Attribute names should be comma-separated and/or '
+        . 'line-separated.'
+      ),
+      '#cols' => 80,
+      '#rows' => 5,
     ];
 
     return parent::buildForm($form,$form_state);
@@ -250,11 +275,17 @@ class SettingsForm extends ConfigFormBase {
       'manager_attr' => 'manager_attr',
       'reports_attr' => 'reports_attr',
       'invalidate_time' => 'invalidate_time',
+      'link_to_user_page' => 'link_to_user_page',
     ];
 
     foreach ($entries as $formKey => $configKey) {
       $config->set($configKey,$form_state->getValue($formKey));
     }
+
+    $userPageAttributes = $form_state->getValue('user_page_attributes');
+    $parser = new EntryParser;
+    $parser->parseTextFlat($userPageAttributes);
+    $config->set('user_page_attributes',$parser->getEntries());
 
     $config->save();
 

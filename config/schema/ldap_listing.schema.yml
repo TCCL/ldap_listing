@@ -41,3 +41,11 @@ ldap_listing.settings:
     invalidate_time:
       type: integer
       label: 'The number of seconds to cache the directory page'
+    link_to_user_page:
+      type: boolean
+      label: 'Determines if the directory listing links to the user page'
+    user_page_attributes:
+      type: sequence
+      label: 'Extra attributes to inject via user__ldap_listing template'
+      sequence:
+        type: string

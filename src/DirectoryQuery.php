@@ -77,6 +77,13 @@ class DirectoryQuery {
   private $ldapServer;
 
   /**
+   * The extra UID attribute to pull for user profile page linking.
+   *
+   * @var string
+   */
+  private $uidAttrs = [];
+
+  /**
    * Cached attribute map.
    *
    * @var array
@@ -116,6 +123,26 @@ class DirectoryQuery {
         continue;
       }
       $this->attrMap[$attr] = $name;
+    }
+
+    // Pull extra user ID attributes if user profile page linking is enabled.
+    if ($this->config->get('link_to_user_page')) {
+      $accountNameAttr = $this->ldapServer->getAccountNameAttribute();
+      $authAttr = $this->ldapServer->getAuthenticationNameAttribute();
+
+      // Prefer account name over auth name in case they are configured
+      // differently.
+      if ($accountNameAttr) {
+        $this->uidAttrs[] = $accountNameAttr;
+      }
+      else if ($authAttr) {
+        $this->uidAttrs[] = $authAttr;
+      }
+
+      $persistUIDAttr = $this->ldapServer->getUniquePersistentAttribute();
+      if ($persistUIDAttr) {
+        $this->uidAttrs[] = $persistUIDAttr;
+      }
     }
   }
 
@@ -217,6 +244,9 @@ class DirectoryQuery {
     // Perform initial query.
 
     $options['filter'] = array_keys($this->attrMap);
+    foreach ($this->uidAttrs as $attr) {
+      $options['filter'][] = $attr;
+    }
     $entries = $this->doQuery($baseDN,$filter,$options);
 
     // Perform recursive queries if configured.
@@ -370,6 +400,10 @@ class DirectoryQuery {
       function(Entry $entry) use(&$group) {
         $attributes = [];
         foreach ($entry->getAttributes() as $name => $values) {
+          if (!isset($this->attrMap[$name])) {
+            continue;
+          }
+
           if (count($values) == 1) {
             $attributes[$this->attrMap[$name]] = $values[0];
           }
@@ -388,9 +422,32 @@ class DirectoryQuery {
         $dn = $entry->getDn();
         $group[$dn] = true;
 
+        // Process uid attributes in order to link to user profile page.
+        $userPageLink = false;
+        if (!empty($this->uidAttrs)) {
+          $puid = $this->ldapServer->derivePuidFromLdapResponse($entry);
+          if (!empty($puid)) {
+            $ldapUserManager = \Drupal::service('ldap.user_manager');
+            $account = $ldapUserManager->getUserAccountFromPuid($puid);
+          }
+          else {
+            $userName = $this->ldapServer->deriveUsernameFromLdapResponse($entry);
+            if (!empty($userName)) {
+              $account = $this->entityTypeManager
+                       ->getStorage('user')
+                       ->loadByProperties(['name' => $userName]);
+            }
+          }
+
+          if ($account ?? false) {
+            $userPageLink = reset($account)->toUrl()->toString();
+          }
+        }
+
         return [
           'dn' => $dn,
           'emailLink' => $emailLink,
+          'userPageLink' => $userPageLink,
           'rank' => 0,
 
         ] + $attributes;
@@ -401,44 +458,42 @@ class DirectoryQuery {
     $keep = array_keys(array_unique(array_column($result,'dn')));
     $result = array_intersect_key($result,$keep);
 
-    if (!empty(self::$OPTIONAL_ATTRS)) {
-      array_walk($result,function(array &$entry) use($group) {
-        $manager = $entry['manager'] ?? null;
-        $reports = $entry['reports'] ?? [];
+    array_walk($result,function(array &$entry) use($group) {
+      $manager = $entry['manager'] ?? null;
+      $reports = $entry['reports'] ?? [];
 
-        foreach (self::$OPTIONAL_ATTRS as $name) {
-          unset($entry[$name]);
-        }
+      foreach (self::$OPTIONAL_ATTRS as $name) {
+        unset($entry[$name]);
+      }
 
-        if (!is_array($reports)) {
-          $reports = [$reports];
-        }
+      if (!is_array($reports)) {
+        $reports = [$reports];
+      }
 
-        if (!empty($manager)) {
-          $entry['rank'] -= array_key_exists($manager,$group);
-        }
+      if (!empty($manager)) {
+        $entry['rank'] -= array_key_exists($manager,$group);
+      }
 
-        if (!empty($reports)) {
-          $reportsInGroup = array_reduce(
-            $reports,
-            function($carry,$item) use($group) {
-              return $carry + array_key_exists($item,$group);
-            },
-            0
-          );
+      if (!empty($reports)) {
+        $reportsInGroup = array_reduce(
+          $reports,
+          function($carry,$item) use($group) {
+            return $carry + array_key_exists($item,$group);
+          },
+          0
+        );
 
-          $entry['rank'] += ( $reportsInGroup > 0 );
-        }
-      });
+        $entry['rank'] += ( $reportsInGroup > 0 );
+      }
+    });
 
-      usort($result,function(array $a,array $b) {
-        if ($a['rank'] != $b['rank']) {
-          return $b['rank'] - $a['rank'];
-        }
+    usort($result,function(array $a,array $b) {
+      if ($a['rank'] != $b['rank']) {
+        return $b['rank'] - $a['rank'];
+      }
 
-        return strcmp($a['name'],$b['name']);
-      });
-    }
+      return strcmp($a['name'],$b['name']);
+    });
 
     return $result;
   }

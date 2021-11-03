@@ -31,8 +31,12 @@
         {% for user in section.body %}
           <div class="user-entry">
             <div class="name user-entry-item">
-              <span>{{ user.name }}</span>
-                {% if user.emailLink %}
+              {% if user.userPageLink %}
+                <a href="{{ user.userPageLink }}">{{ user.name }}</a>
+              {% else %}
+                <span>{{ user.name }}</span>
+              {% endif %}
+              {% if user.emailLink %}
                 <div class="mail-link-wrapper">
                   <a href="{{ user.emailLink }}" class="mail-link" title="{{ user.email }}">✉</a>
                 </div>

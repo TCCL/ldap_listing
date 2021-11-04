@@ -8,6 +8,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\ldap_listing\DirectoryQuery;
+use Drupal\ldap_listing\Form\SettingsForm;
 
 /**
  * Implements hook_help().
@@ -37,6 +38,20 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
         'section' => null,
       ],
     ],
+    'user__ldap_listing' => [
+      'base hook' => 'user',
+      'variables' => [
+        'ldapFields' => [],
+      ],
+    ],
+    'ldap_listing_field' => [
+      'variables' => [
+        'label' => 'LDAP Field',
+        'value' => 'n/a',
+        'field_name' => '',
+        'attributes' => [],
+      ],
+    ],
   ];
 }
 
@@ -45,6 +60,58 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
  */
 function ldap_listing_cron() {
   DirectoryQuery::invalidateIfElapsed();
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function ldap_listing_theme_suggestions_user(array $variables) {
+  $suggestions = [];
+
+  $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
+  if ($config->get('link_to_user_page')) {
+    $suggestions[] = 'user__ldap_listing';
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function ldap_listing_preprocess_user__ldap_listing(array &$variables) {
+  $userQuery = \Drupal::service('ldap_listing.user');
+
+  try {
+    $extraFields = $userQuery->query($variables['user']);
+    error_log(var_export($extraFields,true));
+
+    foreach ($extraFields as $name => $fieldData) {
+      if (array_key_exists($name,$variables['content'])) {
+        continue;
+      }
+
+      $variables['ldapFields'][$name] = [
+        '#theme' => 'ldap_listing_field',
+        '#label' => $fieldData['label'],
+        '#value' => $fieldData['value'],
+        '#attributes' => [
+          'class' => [
+            'ldap-listing-attribute-field',
+            'ldap-listing-user',
+            "ldap-attribute-$name",
+          ],
+        ],
+        '#field_name' => $name,
+        '#attached' => [
+          'library' => ['ldap_listing/attribute-field'],
+        ],
+      ];
+    }
+
+  } catch (\Drupal\ldap_listing\Exception $ex) {
+    error_log($ex->getMessage());
+  }
 }
 
 /**

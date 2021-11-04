@@ -4,3 +4,7 @@ services:
   ldap_listing.query:
     class: '\Drupal\ldap_listing\DirectoryQuery'
     arguments: ['@entity_type.manager','@ldap.bridge']
+
+  ldap_listing.user:
+    class: '\Drupal\ldap_listing\UserQuery'
+    arguments: ['@entity_type.manager','@ldap.bridge','@externalauth.authmap']

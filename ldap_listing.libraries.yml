@@ -15,3 +15,9 @@ directory-listing-no-js:
   css:
     theme:
       css/directory-listing.css: {}
+
+attribute-field:
+  version: 1.x
+  css:
+    component:
+      css/attribute-field.css: {}

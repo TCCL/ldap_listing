@@ -197,7 +197,11 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
-    $parser = new EntryParser($config->get('user_page_attributes'));
+    $userPageAttributes = $config->get('user_page_attributes');
+    $parser = new EntryParser;
+    foreach ($userPageAttributes as $item) {
+      $parser->addEntry([$item['attribute_label'],$item['attribute_name']]);
+    }
     $form['user_page_attributes'] = [
       '#type' => 'textarea',
       '#title' => 'User Profile Page Attributes',
@@ -253,6 +257,28 @@ class SettingsForm extends ConfigFormBase {
         );
       }
     }
+
+    // Parse and verify user page attributes value.
+
+    $parser = new EntryParser;
+    $parser->parseText($form_state->getValue('user_page_attributes'));
+    $userPageAttributes = [];
+    foreach ($parser->getEntries() as $items) {
+      $label = $items[0] ?? null;
+      $attribute = $items[1] ?? null;
+      if (empty($attribute) || empty($label)) {
+        $form_state->setErrorByName(
+          'user_page_attributes',
+          'Value is invalid'
+        );
+        break;
+      }
+      $userPageAttributes[] = [
+        'attribute_label' => $label,
+        'attribute_name' => $attribute,
+      ];
+    }
+    $form_state->setValue('user_page_attributes',$userPageAttributes);
   }
 
   /**
@@ -276,16 +302,12 @@ class SettingsForm extends ConfigFormBase {
       'reports_attr' => 'reports_attr',
       'invalidate_time' => 'invalidate_time',
       'link_to_user_page' => 'link_to_user_page',
+      'user_page_attributes' => 'user_page_attributes',
     ];
 
     foreach ($entries as $formKey => $configKey) {
       $config->set($configKey,$form_state->getValue($formKey));
     }
-
-    $userPageAttributes = $form_state->getValue('user_page_attributes');
-    $parser = new EntryParser;
-    $parser->parseTextFlat($userPageAttributes);
-    $config->set('user_page_attributes',$parser->getEntries());
 
     $config->save();
 

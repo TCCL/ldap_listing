@@ -48,4 +48,12 @@ ldap_listing.settings:
       type: sequence
       label: 'Extra attributes to inject via user__ldap_listing template'
       sequence:
-        type: string
+        type: mapping
+        label: 'List of attribute label,name pairs'
+        mapping:
+          attribute_label:
+            type: string
+            label: 'The attribute label'
+          attribute_name:
+            type: string
+            label: 'The attribute name'

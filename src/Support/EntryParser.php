@@ -10,7 +10,7 @@ namespace Drupal\ldap_listing\Support;
 
 class EntryParser {
   /**
-   * @var string[]
+   * @var string[]|string[][]
    */
   private $entries;
 
@@ -31,6 +31,15 @@ class EntryParser {
    */
   public function getEntries() : array {
     return $this->entries;
+  }
+
+  /**
+   * Adds an entry to the parser's internal list.
+   *
+   * @param mixed $entry
+   */
+  public function addEntry($entry) : void {
+    $this->entries[] = $entry;
   }
 
   /**

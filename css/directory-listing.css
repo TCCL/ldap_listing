@@ -226,6 +226,25 @@
   > .directory-listing-sections
   > .directory-listing-section-wrapper
   .body
+  > .error,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .body
+  > .error
+{
+  margin: 2em;
+  background-color: #eb8d8d;
+  padding: 1em;
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: 18px;
+  border-radius: 0.5em;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
   > .user-entry,
 .ldap-listing-directory-listing-field
   > .directory-listing-section-wrapper

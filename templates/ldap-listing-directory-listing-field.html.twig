@@ -28,6 +28,12 @@
       {% endif %}
 
       <div class="body">
+        {% if section.error %}
+          <div class="error">
+            <div>An error occurred and this section of the directory could not be loaded.</div>
+          </div>
+        {% endif %}
+
         {% for user in section.body %}
           <div class="user-entry">
             <div class="name user-entry-item">

@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
 use Symfony\Component\Ldap\Entry;
+use Symfony\Component\Ldap\Exception\LdapException;
 
 class DirectoryQuery {
   const CACHE_TAG = 'ldap_listing_directory_query';
@@ -247,44 +248,56 @@ class DirectoryQuery {
     foreach ($this->uidAttrs as $attr) {
       $options['filter'][] = $attr;
     }
-    $entries = $this->doQuery($baseDN,$filter,$options);
 
-    // Perform recursive queries if configured.
+    try {
+      $entries = $this->doQuery($baseDN,$filter,$options);
 
-    $depth = $section->get('depth');
-    if ($depth < 1) {
-      $depth = self::MAX_RECURSIVE_DEPTH;
+      // Perform recursive queries if configured.
+
+      $depth = $section->get('depth');
+      if ($depth < 1) {
+        $depth = self::MAX_RECURSIVE_DEPTH;
+      }
+
+      $groupBaseDN = $this->config->get('group_base_dn');
+      $groupFilterFormat = $this->config->get('group_filter');
+      if ($depth > 1 && !empty($groupBaseDN) && !empty($groupFilterFormat)) {
+        $subEntries = $this->recurseSubgroups(
+          $groupBaseDN,
+          $baseDN,
+          $groupDN,
+          $groupFilterFormat,
+          $filterFormat,
+          $options,
+          $depth
+        );
+
+        $entries = array_merge($entries,$subEntries);
+      }
+
+      // Format entries; extract and format header/footer information.
+
+      $body = $this->formatUserEntries($entries);
+      $header = $section->get('header_entries');
+      $footer = $section->get('footer_entries');
+
+      self::padLists($header);
+      self::padLists($footer);
+
+      $error = false;
+
+    } catch (LdapException $ex) {
+      $body = [];
+      $header = [];
+      $footer = [];
+      $error = true;
     }
-
-    $groupBaseDN = $this->config->get('group_base_dn');
-    $groupFilterFormat = $this->config->get('group_filter');
-    if ($depth > 1 && !empty($groupBaseDN) && !empty($groupFilterFormat)) {
-      $subEntries = $this->recurseSubgroups(
-        $groupBaseDN,
-        $baseDN,
-        $groupDN,
-        $groupFilterFormat,
-        $filterFormat,
-        $options,
-        $depth
-      );
-
-      $entries = array_merge($entries,$subEntries);
-    }
-
-    // Format entries; extract and format header/footer information.
-
-    $body = $this->formatUserEntries($entries);
-    $header = $section->get('header_entries');
-    $footer = $section->get('footer_entries');
-
-    self::padLists($header);
-    self::padLists($footer);
 
     return [
       'id' => $section->get('id'),
       'label' => $section->get('label'),
       'abbrev' => $section->get('abbrev'),
+      'error' => $error,
       'header' => $header,
       'body' => $body,
       'footer' => $footer,

@@ -440,7 +440,11 @@ class DirectoryQuery {
         if (!empty($this->uidAttrs)) {
           $puid = $this->ldapServer->derivePuidFromLdapResponse($entry);
           if (!empty($puid)) {
-            $ldapUserManager = \Drupal::service('ldap.user_manager');
+            static $ldapUserManager;
+            if (!isset($ldapUserManager)) {
+              $ldapUserManager = \Drupal::service('ldap.user_manager');
+              $ldapUserManager->setServer($this->ldapServer);
+            }
             $account = $ldapUserManager->getUserAccountFromPuid($puid);
           }
           else {
@@ -449,11 +453,14 @@ class DirectoryQuery {
               $account = $this->entityTypeManager
                        ->getStorage('user')
                        ->loadByProperties(['name' => $userName]);
+              if (is_array($account)) {
+                $account = reset($account);
+              }
             }
           }
 
           if ($account ?? false) {
-            $userPageLink = reset($account)->toUrl()->toString();
+            $userPageLink = $account->toUrl()->toString();
           }
         }
 

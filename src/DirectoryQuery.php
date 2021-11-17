@@ -438,7 +438,10 @@ class DirectoryQuery {
         // Process uid attributes in order to link to user profile page.
         $userPageLink = false;
         if (!empty($this->uidAttrs)) {
+          $account = false;
           $puid = $this->ldapServer->derivePuidFromLdapResponse($entry);
+
+          // Try linking via PUID.
           if (!empty($puid)) {
             static $ldapUserManager;
             if (!isset($ldapUserManager)) {
@@ -447,7 +450,9 @@ class DirectoryQuery {
             }
             $account = $ldapUserManager->getUserAccountFromPuid($puid);
           }
-          else {
+
+          // Try linking via user name.
+          if (!$account) {
             $userName = $this->ldapServer->deriveUsernameFromLdapResponse($entry);
             if (!empty($userName)) {
               $account = $this->entityTypeManager
@@ -459,7 +464,7 @@ class DirectoryQuery {
             }
           }
 
-          if ($account ?? false) {
+          if ($account) {
             $userPageLink = $account->toUrl()->toString();
           }
         }

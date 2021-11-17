@@ -96,6 +96,9 @@ function ldap_listing_preprocess_user__ldap_listing(array &$variables) {
       if (array_key_exists($name,$variables['content'])) {
         continue;
       }
+      if (empty($fieldData['value'])) {
+        continue;
+      }
 
       $variables['ldapFields'][$name] = [
         '#theme' => 'ldap_listing_field',

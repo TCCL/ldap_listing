@@ -10,4 +10,8 @@ name_attr: ''
 email_attr: ''
 title_attr: ''
 phone_attr: ''
+manager_attr: ''
+reports_attr: ''
 invalidate_time: 86400
+link_to_user_page: false
+user_page_attributes: []

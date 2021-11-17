@@ -11,9 +11,15 @@ ldap_listing.settings:
     base_dn:
       type: text
       label: 'The base DN to search for users in groups'
+    group_base_dn:
+      type: text
+      label: 'The group base DN to search for subgroups'
     filter:
       type: text
       label: 'LDAP filter for user member of group'
+    group_filter:
+      type: text
+      label: 'LDAP filter for group member of group'
     name_attr:
       type: text
       label: 'The user name LDAP attribute name'
@@ -26,6 +32,28 @@ ldap_listing.settings:
     phone_attr:
       type: text
       label: 'The phone number LDAP attribute name'
+    manager_attr:
+      type: text
+      label: 'The manager LDAP attribute name'
+    reports_attr:
+      type: text
+      label: 'The direct reports LDAP attribute name'
     invalidate_time:
       type: integer
       label: 'The number of seconds to cache the directory page'
+    link_to_user_page:
+      type: boolean
+      label: 'Determines if the directory listing links to the user page'
+    user_page_attributes:
+      type: sequence
+      label: 'Extra attributes to inject via user__ldap_listing template'
+      sequence:
+        type: mapping
+        label: 'List of attribute label,name pairs'
+        mapping:
+          attribute_label:
+            type: string
+            label: 'The attribute label'
+          attribute_name:
+            type: string
+            label: 'The attribute name'

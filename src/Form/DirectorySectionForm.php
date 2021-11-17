@@ -60,6 +60,17 @@ class DirectorySectionForm extends EntityForm {
       '#required' => true,
     ];
 
+    $form['directory_section']['depth'] = [
+      '#type' => 'number',
+      '#title' => 'Depth',
+      '#description' => $this->t(
+        'The recursive depth for the LDAP search to apply when a group contains '
+        . 'subgroups. A value less than 1 means an unlimited depth.'
+      ),
+      '#default_value' => $this->entity->get('depth') ?? 1,
+      '#required' => false,
+    ];
+
     $form['directory_section']['header_entries'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Static Header Entries'),

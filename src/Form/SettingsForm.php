@@ -12,6 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ldap_listing\DirectoryQuery;
+use Drupal\ldap_listing\Support\EntryParser;
 
 class SettingsForm extends ConfigFormBase {
   const CONFIG_OBJECT = 'ldap_listing.settings';
@@ -76,8 +77,16 @@ class SettingsForm extends ConfigFormBase {
       '#title' => 'Base DN',
       '#default_value' => $config->get('base_dn'),
       '#description' => (
-        'The base Distinguished Name that identifies the root of the '
-        . 'user directory'
+        'The base Distinguished Name for a user search'
+      ),
+    ];
+
+    $form['group_base_dn'] = [
+      '#type' => 'textfield',
+      '#title' => 'Group Base DN',
+      '#default_value' => $config->get('group_base_dn'),
+      '#description' => (
+        'The base Distinguished Name for a group search'
       ),
     ];
 
@@ -89,6 +98,18 @@ class SettingsForm extends ConfigFormBase {
         'The format string used to generate the filter string that queries '
         . 'membership of section groups. The "%s" token will be replaced with '
         . 'the Distinguished Name of the group.'
+      ),
+    ];
+
+    $form['group_filter'] = [
+      '#type' => 'textfield',
+      '#title' => 'Group Filter Format',
+      '#default_value' => $config->get('group_filter'),
+      '#description' => (
+        'The format string used to generate the filter string that queries '
+        . 'subgroups within section groups. The "%s" token will be replaced with '
+        . 'the Distinguished Name of the group. This is only used when a section has '
+        . 'a configured recursive depth.'
       ),
     ];
 
@@ -128,6 +149,28 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
+    $form['manager_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Manager Attribute (Optional)',
+      '#default_value' => $config->get('manager_attr'),
+      '#description' => (
+        'The LDAP field that contains the user manager. (This '
+        . 'field is optional and is used to rank the items in '
+        . 'each section.)'
+      ),
+    ];
+
+    $form['reports_attr'] = [
+      '#type' => 'textfield',
+      '#title' => 'Reports Attribute (Optional)',
+      '#default_value' => $config->get('reports_attr'),
+      '#description' => (
+        'The LDAP field that contains the user employee reports. (This '
+        . 'field is optional and is used to rank the items in '
+        . 'each section.)'
+      ),
+    ];
+
     $form['invalidate_time'] = [
       '#type' => 'radios',
       '#options' => [
@@ -141,7 +184,35 @@ class SettingsForm extends ConfigFormBase {
       '#description' => (
         'The interval of time that elapses before the directory page cache '
         . 'invalidates.'
-      )
+      ),
+    ];
+
+    $form['link_to_user_page'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Link to User Profile Page',
+      '#default_value' => $config->get('link_to_user_page'),
+      '#description' => (
+        'If enabled, user entries in the directory listing will link to '
+        . 'user profile pages if the entry can be mapped to a Drupal user.'
+      ),
+    ];
+
+    $userPageAttributes = $config->get('user_page_attributes');
+    $parser = new EntryParser;
+    foreach ($userPageAttributes as $item) {
+      $parser->addEntry([$item['attribute_label'],$item['attribute_name']]);
+    }
+    $form['user_page_attributes'] = [
+      '#type' => 'textarea',
+      '#title' => 'User Profile Page Attributes',
+      '#default_value' => $parser->makeText(),
+      '#description' => (
+        'The list of LDAP attributes to fetch and render on the user profile '
+        . 'page if enabled. Attribute names should be comma-separated and/or '
+        . 'line-separated.'
+      ),
+      '#cols' => 80,
+      '#rows' => 5,
     ];
 
     return parent::buildForm($form,$form_state);
@@ -186,6 +257,28 @@ class SettingsForm extends ConfigFormBase {
         );
       }
     }
+
+    // Parse and verify user page attributes value.
+
+    $parser = new EntryParser;
+    $parser->parseText($form_state->getValue('user_page_attributes'));
+    $userPageAttributes = [];
+    foreach ($parser->getEntries() as $items) {
+      $label = $items[0] ?? null;
+      $attribute = $items[1] ?? null;
+      if (empty($attribute) || empty($label)) {
+        $form_state->setErrorByName(
+          'user_page_attributes',
+          'Value is invalid'
+        );
+        break;
+      }
+      $userPageAttributes[] = [
+        'attribute_label' => $label,
+        'attribute_name' => $attribute,
+      ];
+    }
+    $form_state->setValue('user_page_attributes',$userPageAttributes);
   }
 
   /**
@@ -198,12 +291,18 @@ class SettingsForm extends ConfigFormBase {
       'title' => 'title',
       'ldap_server' => 'ldap_server',
       'base_dn' => 'base_dn',
+      'group_base_dn' => 'group_base_dn',
       'filter' => 'filter',
+      'group_filter' => 'group_filter',
       'name_attr' => 'name_attr',
       'email_attr' => 'email_attr',
       'title_attr' => 'title_attr',
       'phone_attr' => 'phone_attr',
+      'manager_attr' => 'manager_attr',
+      'reports_attr' => 'reports_attr',
       'invalidate_time' => 'invalidate_time',
+      'link_to_user_page' => 'link_to_user_page',
+      'user_page_attributes' => 'user_page_attributes',
     ];
 
     foreach ($entries as $formKey => $configKey) {

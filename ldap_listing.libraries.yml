@@ -9,3 +9,15 @@ directory-listing:
     js/directory-listing.js: {}
   dependencies:
     - core/jquery
+
+directory-listing-no-js:
+  version: 1.x
+  css:
+    theme:
+      css/directory-listing.css: {}
+
+attribute-field:
+  version: 1.x
+  css:
+    component:
+      css/attribute-field.css: {}

@@ -9,7 +9,7 @@
 namespace Drupal\ldap_listing\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\ldap_listing\Support\LineParser;
+use Drupal\ldap_listing\Support\EntryParser;
 
 /**
  * Defines the directory_section entity.
@@ -48,6 +48,7 @@ use Drupal\ldap_listing\Support\LineParser;
  *     "label",
  *     "abbrev",
  *     "group_dn",
+ *     "depth",
  *     "header_entries",
  *     "footer_entries",
  *     "weight"
@@ -94,15 +95,17 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
    */
   public function getHeaderEntriesText() : string {
     $entries = $this->get('header_entries');
-    return self::makeTextFromEntries($entries);
+    $parser = new EntryParser($entries ?? []);
+    return $parser->makeText();
   }
 
   /**
    * {@inheritdoc}
    */
   public function setHeaderEntriesFromText(string $text) {
-    $entries = self::parseEntriesFromText($text);
-    $this->set('header_entries',$entries);
+    $parser = new EntryParser;
+    $parser->parseText($text);
+    $this->set('header_entries',$parser->getEntries());
 
     return $this;
   }
@@ -112,15 +115,17 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
    */
   public function getFooterEntriesText() : string {
     $entries = $this->get('footer_entries');
-    return self::makeTextFromEntries($entries);
+    $parser = new EntryParser($entries ?? []);
+    return $parser->makeText();
   }
 
   /**
    * {@inheritdoc}
    */
   public function setFooterEntriesFromText(string $text) {
-    $entries = self::parseEntriesFromText($text);
-    $this->set('footer_entries',$entries);
+    $parser = new EntryParser;
+    $parser->parseText($text);
+    $this->set('footer_entries',$parser->getEntries());
 
     return $this;
   }
@@ -130,45 +135,5 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
    */
   public function getWeight() : int {
     return $this->weight ?? 0;
-  }
-
-  private static function makeTextFromEntries($entries) : string {
-    if (!is_array($entries)) {
-      return '';
-    }
-
-    $entry2text = function($entry) {
-      if (strpos($entry,',') !== false) {
-        return '"' . $entry . '"';
-      }
-
-      return $entry;
-    };
-
-    $text = '';
-    foreach ($entries as $entry) {
-      $text .= implode(',',array_map($entry2text,$entry));
-      $text .= PHP_EOL;
-    }
-
-    return $text;
-  }
-
-  private static function parseEntriesFromText(string $text) : array {
-    $lines = preg_split('/\r\n|\r|\n/',$text);
-
-    $entries = [];
-    foreach ($lines as $line) {
-      $parser = new LineParser($line);
-      $entry = $parser->getTokens();
-
-      if (count(array_filter($entry)) == 0) {
-        continue;
-      }
-
-      $entries[] = $entry;
-    }
-
-    return $entries;
   }
 }

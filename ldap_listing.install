@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * ldap_listing.install
+ *
+ * ldap_listing
+ */
+
+/**
+ * Update configuration schema for 1.2
+ */
+function ldap_listing_update_9101() {
+  $configFactory = \Drupal::configFactory();
+
+  // Add 'depth' property to each directory section config.
+  foreach ($configFactory->listAll('ldap_listing.directory_section.') as $name) {
+    $config = $configFactory->getEditable($name);
+    $config->set('depth',1);
+    $config->save();
+  }
+
+  // Add new properties to ldap_listing.settings.
+  $settings = $configFactory->getEditable('ldap_listing.settings');
+  $settings->set('link_to_user_page',false);
+  $settings->set('user_page_attributes',[]);
+  $settings->save();
+}
+
+/**
+ * Local Variables:
+ * mode:php
+ * End:
+ */

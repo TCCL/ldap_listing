@@ -5,4 +5,9 @@ entity.ldap_listing_directory_section.collection:
   route_name: entity.ldap_listing_directory_section.collection
   description: 'Configure LDAP directory listing sections'
   parent: system.admin_structure
-  weight: 100
+
+ldap_listing.settings:
+  title: 'LDAP directory listing'
+  route_name: ldap_listing.settings_page
+  description: 'Configure settings for the LDAP directory listing module'
+  parent: user.admin_index

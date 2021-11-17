@@ -40,13 +40,26 @@
           {% endif %}
 
           <div class="body">
+            {% if section.error %}
+              <div class="error">
+                <div>An error occurred and this section of the directory could not be loaded.</div>
+              </div>
+            {% endif %}
+
             {% for user in section.body %}
               <div class="user-entry">
-                {% if user.emailLink %}
-                  <div class="name user-entry-item"><a href="{{ user.emailLink }}">{{ user.name }}</a></div>
-                {% else %}
-                  <div class="name user-entry-item">{{ user.name }}</div>
-                {% endif %}
+                <div class="name user-entry-item">
+                  {% if user.userPageLink %}
+                    <a href="{{ user.userPageLink }}">{{ user.name }}</a>
+                  {% else %}
+                    <span>{{ user.name }}</span>
+                  {% endif %}
+                  {% if user.emailLink %}
+                    <div class="mail-link-wrapper">
+                      <a href="{{ user.emailLink }}" class="mail-link" title="{{ user.email }}">✉</a>
+                    </div>
+                  {% endif %}
+                </div>
                 <div class="title user-entry-item">{{ user.title }}</div>
                 <div class="phone user-entry-item">{{ user.phone }}</div>
               </div>

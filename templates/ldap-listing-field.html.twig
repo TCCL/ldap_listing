@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Renders an LDAP attribute field provided via the ldap_listing module.
+ *
+ * Available variables:
+ * - label: The field label
+ * - value: The field value
+ * - field_name: The field name (i.e. LDAP attribute name)
+ * - attributes: HTML attributes for the container element.
+ */
+#}
+<div{{ attributes }}>
+  <div class="ldap-listing-attribute-field-label">{{ label }}</div>
+  <div class="ldap-listing-attribute-field-value">{{ value }}</div>
+</div>

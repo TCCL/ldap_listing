@@ -68,8 +68,15 @@ function ldap_listing_cron() {
 function ldap_listing_theme_suggestions_user(array $variables) {
   $suggestions = [];
 
+  // Apply ldap_listing suggestion to user template if configured and if path is
+  // user profile page.
+  $request = \Drupal::routeMatch()->getRouteObject();
+  $pathParts = array_values(array_filter(explode('/',$request->getPath())));
   $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
-  if ($config->get('link_to_user_page')) {
+  if ($config->get('link_to_user_page')
+      && $pathParts[0] == 'user'
+      && $pathParts[1] == '{user}')
+  {
     $suggestions[] = 'user__ldap_listing';
   }
 

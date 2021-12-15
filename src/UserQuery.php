@@ -141,10 +141,11 @@ class UserQuery {
     foreach ($this->userPageAttributes as $attribute) {
       $name = $attribute['attribute_name'];
       $label = $attribute['attribute_label'];
+      $value = $attributes[$name][0] ?? null;
 
       $result[$name] = [
         'label' => $label,
-        'value' => $attributes[$name][0] ?? null,
+        'value' => $value,
       ];
     }
 

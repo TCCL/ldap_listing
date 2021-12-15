@@ -83,11 +83,10 @@ function ldap_listing_user_view(array &$build,
                                 EntityViewDisplayInterface $display,
                                 $viewMode)
 {
+  $build['#cache']['tags'][] = DirectoryQuery::CACHE_TAG;
   $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
 
   if ($config->get('link_to_user_page')) {
-    $build['#cache']['tags'][] = DirectoryQuery::CACHE_TAG;
-
     try {
       $userQuery = \Drupal::service('ldap_listing.user');
       $extraFields = $userQuery->query($entity);

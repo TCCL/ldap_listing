@@ -92,6 +92,21 @@ class DirectoryQuery {
   private $attrMap = [];
 
   /**
+   * Flag indicating whether the query results should include links to user
+   * pages.
+   *
+   * @var bool
+   */
+  private $linkToUserPage = false;
+
+  /**
+   * User mapping manager instance used to map LDAP entries to Drupal users.
+   *
+   * @var \Drupal\ldap_listing\UserMappingManager
+   */
+  private $userMappingManager;
+
+  /**
    * Creates a new DirectoryQuery instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -144,6 +159,9 @@ class DirectoryQuery {
       if ($persistUIDAttr) {
         $this->uidAttrs[] = $persistUIDAttr;
       }
+
+      $this->linkToUserPage = true;
+      $this->userMappingManager = new UserMappingManager($this->ldapServer);
     }
   }
 
@@ -437,33 +455,8 @@ class DirectoryQuery {
 
         // Process uid attributes in order to link to user profile page.
         $userPageLink = false;
-        if (!empty($this->uidAttrs)) {
-          $account = false;
-          $puid = $this->ldapServer->derivePuidFromLdapResponse($entry);
-
-          // Try linking via PUID.
-          if (!empty($puid)) {
-            static $ldapUserManager;
-            if (!isset($ldapUserManager)) {
-              $ldapUserManager = \Drupal::service('ldap.user_manager');
-              $ldapUserManager->setServer($this->ldapServer);
-            }
-            $account = $ldapUserManager->getUserAccountFromPuid($puid);
-          }
-
-          // Try linking via user name.
-          if (!$account) {
-            $userName = $this->ldapServer->deriveUsernameFromLdapResponse($entry);
-            if (!empty($userName)) {
-              $account = $this->entityTypeManager
-                       ->getStorage('user')
-                       ->loadByProperties(['name' => $userName]);
-              if (is_array($account)) {
-                $account = reset($account);
-              }
-            }
-          }
-
+        if ($this->linkToUserPage) {
+          $account = $this->userMappingManager->mapUserFromLdapEntry($entry);
           if ($account) {
             $userPageLink = $account->toUrl()->toString();
           }

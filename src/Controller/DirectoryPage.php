@@ -66,13 +66,11 @@ class DirectoryPage extends ControllerBase {
 
     $render = [
       '#theme' => 'ldap_listing_directory_listing',
-      '#index' => [
-        'sections' => $sections,
-        'manifest' => self::createManifestFromSections($sections),
-        'lastGeneratedMessage' => (
-          date('F jS \a\t g:i A',$time)
-        )
-      ],
+      '#sections' => $sections,
+      '#manifest' => self::createManifestFromSections($sections),
+      '#last_generated_message' => (
+        date('F jS \a\t g:i A',$time)
+      ),
       '#attached' => [
         'library' => ['ldap_listing/directory-listing'],
       ],

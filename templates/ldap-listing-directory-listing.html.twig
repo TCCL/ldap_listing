@@ -1,7 +1,29 @@
 {#
 /**
+ * @file
  * Default theme implementation for ldap_listing_directory_listing
  * render element.
+ *
+ * Available variables:
+ * - manifest: List of all user info to embed in the page for front-end use
+ * - sections: List of directory sections to render; each section contains the following object:
+ *   - id: The section config entity ID
+ *   - label: The section title text
+ *   - abbrev: The abbreviated section title text
+ *   - error: Flag indicating whether an error occurred and the section could not be loaded
+ *   - header: List of lists containing header item values
+ *   - body: List of user entries; each entry contains the following object:
+ *     - dn: The user's distinguished name
+ *     - emailLink: If non-empty, then contains a mailto link of the user's email address
+ *     - userPageLink: If non-empty, then contains the link to the user's profile page
+ *     - userImageLink: If non-empty, then contains the link to the user's profile image
+ *     - rank: The rank classification of the user (Note: the list is already sorted by rank)
+ *     - name: The user name
+ *     - email: The user's raw email address
+ *     - title: The user's job title
+ *     - phone: The user's phone number
+ *   - footer: List of lists containing footer item values
+ *   - weight: The weight value assigned to this section
  */
 #}
 
@@ -11,13 +33,13 @@
       <input id="ldap-listing-directory-listing-search-box" class="directory-listing-search-box" placeholder="Search name/job/phone/department" type="search">
     </div>
 
-    <script id="ldap-listing-directory-listing-manifest" type="application/json">{{ index.manifest|json_encode()|raw }}</script>
+    <script id="ldap-listing-directory-listing-manifest" type="application/json">{{ manifest|json_encode()|raw }}</script>
 
     <div id="ldap-listing-directory-listing-results-region" class="directory-listing-search-results"></div>
   </div>
 
   <div class="directory-listing-sections">
-    {% for section in index.sections %}
+    {% for section in sections %}
       <div class="directory-listing-section-wrapper">
         <div class="directory-listing-section">
           <div class="heading">
@@ -86,5 +108,5 @@
     {% endfor %}
   </div>
 
-  <div class="directory-listing-bottom-message">Last generated on {{ index.lastGeneratedMessage }}</div>
+  <div class="directory-listing-bottom-message">Last generated on {{ last_generated_message }}</div>
 </div>

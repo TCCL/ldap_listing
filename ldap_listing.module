@@ -32,7 +32,9 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
   return [
     'ldap_listing_directory_listing' => [
       'variables' => [
-        'index' => null,
+        'manifest' => [],
+        'sections' => [],
+        'last_generated_message' => 'No information is available at this time.',
       ],
     ],
     'ldap_listing_directory_listing_field' => [

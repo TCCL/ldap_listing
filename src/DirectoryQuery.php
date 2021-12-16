@@ -453,12 +453,23 @@ class DirectoryQuery {
         $dn = $entry->getDn();
         $group[$dn] = true;
 
-        // Process uid attributes in order to link to user profile page.
+        // Grab links to user content including profile page and image. This is
+        // done by mapping the LDAP entry to a Drupal user (if possible).
         $userPageLink = false;
+        $userImageLink = false;
         if ($this->linkToUserPage) {
-          $account = $this->userMappingManager->mapUserFromLdapEntry($entry);
-          if ($account) {
-            $userPageLink = $account->toUrl()->toString();
+          $user = $this->userMappingManager->mapUserFromLdapEntry($entry);
+          if ($user) {
+            $userPageLink = $user->toUrl()->toString();
+
+            $imgFieldList = $user->get('user_picture');
+            if ($imgFieldList) {
+              $img = $imgFieldList->first();
+              if ($img) {
+                $userImageUri = $img->entity->getFileUri();
+                $userImageLink = file_create_url($userImageUri);
+              }
+            }
           }
         }
 
@@ -466,6 +477,7 @@ class DirectoryQuery {
           'dn' => $dn,
           'emailLink' => $emailLink,
           'userPageLink' => $userPageLink,
+          'userImageLink' => $userImageLink,
           'rank' => 0,
 
         ] + $attributes;

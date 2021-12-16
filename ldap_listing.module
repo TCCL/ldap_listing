@@ -6,6 +6,8 @@
  * ldap_listing
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\ldap_listing\DirectoryQuery;
 use Drupal\ldap_listing\Form\SettingsForm;
@@ -30,26 +32,14 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
   return [
     'ldap_listing_directory_listing' => [
       'variables' => [
-        'index' => null,
+        'manifest' => [],
+        'sections' => [],
+        'last_generated_message' => 'No information is available at this time.',
       ],
     ],
     'ldap_listing_directory_listing_field' => [
       'variables' => [
         'section' => null,
-      ],
-    ],
-    'user__ldap_listing' => [
-      'base hook' => 'user',
-      'variables' => [
-        'ldapFields' => [],
-      ],
-    ],
-    'ldap_listing_field' => [
-      'variables' => [
-        'label' => 'LDAP Field',
-        'value' => 'n/a',
-        'field_name' => '',
-        'attributes' => [],
       ],
     ],
   ];
@@ -63,65 +53,90 @@ function ldap_listing_cron() {
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK().
+ * Implements hook_entity_extra_field_info().
  */
-function ldap_listing_theme_suggestions_user(array $variables) {
-  $suggestions = [];
+function ldap_listing_entity_extra_field_info() {
+  $extra = [];
 
-  // Apply ldap_listing suggestion to user template if configured and if path is
-  // user profile page.
-  $request = \Drupal::routeMatch()->getRouteObject();
-  $pathParts = array_values(array_filter(explode('/',$request->getPath())));
   $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
-  if ($config->get('link_to_user_page')
-      && $pathParts[0] == 'user'
-      && $pathParts[1] == '{user}')
-  {
-    $suggestions[] = 'user__ldap_listing';
-  }
+  if ($config->get('link_to_user_page')) {
+    $fields = [];
 
-  return $suggestions;
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function ldap_listing_preprocess_user__ldap_listing(array &$variables) {
-  $userQuery = \Drupal::service('ldap_listing.user');
-
-  try {
-    $extraFields = $userQuery->query($variables['user']);
-
-    foreach ($extraFields as $name => $fieldData) {
-      if (array_key_exists($name,$variables['content'])) {
-        continue;
-      }
-      if (empty($fieldData['value'])) {
-        continue;
-      }
-
-      $variables['ldapFields'][$name] = [
-        '#theme' => 'ldap_listing_field',
-        '#label' => $fieldData['label'],
-        '#value' => $fieldData['value'],
-        '#attributes' => [
-          'class' => [
-            'ldap-listing-attribute-field',
-            'ldap-listing-user',
-            "ldap-attribute-$name",
-          ],
-        ],
-        '#field_name' => $name,
-        '#attached' => [
-          'library' => ['ldap_listing/attribute-field'],
-        ],
+    $attrs = $config->get('user_page_attributes');
+    $w = 100;
+    foreach ($attrs as $attr) {
+      $name = $attr['attribute_name'];
+      $fields[$name] = [
+        'label' => $attr['attribute_label'],
+        'description' => "Custom LDAP user field: {$attr['attribute_label']}",
+        'weight' => $w++,
+        'visible' => true,
       ];
     }
 
-    $variables['#cache']['tags'][] = DirectoryQuery::CACHE_TAG;
+    $extra['user']['user']['display'] = $fields;
+  }
 
-  } catch (\Drupal\ldap_listing\Exception $ex) {
-    error_log($ex->getMessage());
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_view().
+ */
+function ldap_listing_user_view(array &$build,
+                                EntityInterface $entity,
+                                EntityViewDisplayInterface $display,
+                                $viewMode)
+{
+  $build['#cache']['tags'][] = DirectoryQuery::CACHE_TAG;
+  $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
+
+  if ($config->get('link_to_user_page')) {
+    try {
+      $userQuery = \Drupal::service('ldap_listing.user');
+      $extraFields = $userQuery->query($entity);
+
+      foreach ($extraFields as $name => $fieldData) {
+        if (empty($fieldData['value'])) {
+          unset($build[$name]);
+          continue;
+        }
+
+        // Use the field template to render the pseudofield. This is a little
+        // hacky, but it seems to work. NOTE: I'm not sure if the #items
+        // property needs to be set.
+
+        $build[$name] = [
+          '#theme' => 'field',
+          '#title' => $fieldData['label'],
+          '#label_display' => 'above',
+          '#field_name' => $name,
+          '#field_type' => 'textfield',
+          '#entity_type' => 'user',
+          '#view_mode' => '_custom',
+          '#bundle' => $entity->bundle(),
+          '#object' => $entity,
+          '#is_multiple' => false,
+          //'#items' => [],
+          '#attributes' => [
+            'class' => [
+              'ldap-listing-attribute',
+              "ldap-listing-attribute-$name",
+            ],
+          ],
+
+          // Use the 'plain_text' filter text format to render field content.
+          0 => [
+            '#type' => 'processed_text',
+            '#text' => $fieldData['value'],
+            '#format' => 'plain_text',
+          ],
+        ];
+      }
+
+    } catch (\Drupal\ldap_listing\Exception $ex) {
+      error_log($ex->getMessage());
+    }
   }
 }
 

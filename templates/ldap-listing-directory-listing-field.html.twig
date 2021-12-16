@@ -1,7 +1,30 @@
 {#
 /**
+ * @file
  * Default theme implementation for ldap_listing_directory_listing
  * field item.
+ *
+ * Available variables:
+ * - section: The directory section data to render for this field
+ *
+ * Section variables:
+ * - section.id: The section config entity ID
+ * - section.label: The section title text
+ * - section.abbrev: The abbreviated section title text
+ * - section.error: Flag indicating whether an error occurred and the section could not be loaded
+ * - section.header: List of lists containing header item values
+ * - section.body: List of user entries; each entry contains the following object:
+ *   - section.body.dn: The user's distinguished name
+ *   - section.body.emailLink: If non-empty, then contains a mailto link of the user's email address
+ *   - section.body.userPageLink: If non-empty, then contains the link to the user's profile page
+ *   - section.body.userImageLink: If non-empty, then contains the link to the user's profile image
+ *   - section.body.rank: The rank classification of the user (Note: the list is already sorted by rank)
+ *   - section.body.name: The user name
+ *   - section.body.email: The user's raw email address
+ *   - section.body.title: The user's job title
+ *   - section.body.phone: The user's phone number
+ * - section.footer: List of lists containing footer item values
+ * - section.weight: The weight value assigned to this section
  */
 #}
 

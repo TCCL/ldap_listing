@@ -92,6 +92,21 @@ class DirectoryQuery {
   private $attrMap = [];
 
   /**
+   * Flag indicating whether the query results should include links to user
+   * pages.
+   *
+   * @var bool
+   */
+  private $linkToUserPage = false;
+
+  /**
+   * User mapping manager instance used to map LDAP entries to Drupal users.
+   *
+   * @var \Drupal\ldap_listing\UserMappingManager
+   */
+  private $userMappingManager;
+
+  /**
    * Creates a new DirectoryQuery instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -144,6 +159,9 @@ class DirectoryQuery {
       if ($persistUIDAttr) {
         $this->uidAttrs[] = $persistUIDAttr;
       }
+
+      $this->linkToUserPage = true;
+      $this->userMappingManager = new UserMappingManager($this->ldapServer);
     }
   }
 
@@ -435,37 +453,23 @@ class DirectoryQuery {
         $dn = $entry->getDn();
         $group[$dn] = true;
 
-        // Process uid attributes in order to link to user profile page.
+        // Grab links to user content including profile page and image. This is
+        // done by mapping the LDAP entry to a Drupal user (if possible).
         $userPageLink = false;
-        if (!empty($this->uidAttrs)) {
-          $account = false;
-          $puid = $this->ldapServer->derivePuidFromLdapResponse($entry);
+        $userImageLink = false;
+        if ($this->linkToUserPage) {
+          $user = $this->userMappingManager->mapUserFromLdapEntry($entry);
+          if ($user) {
+            $userPageLink = $user->toUrl()->toString();
 
-          // Try linking via PUID.
-          if (!empty($puid)) {
-            static $ldapUserManager;
-            if (!isset($ldapUserManager)) {
-              $ldapUserManager = \Drupal::service('ldap.user_manager');
-              $ldapUserManager->setServer($this->ldapServer);
-            }
-            $account = $ldapUserManager->getUserAccountFromPuid($puid);
-          }
-
-          // Try linking via user name.
-          if (!$account) {
-            $userName = $this->ldapServer->deriveUsernameFromLdapResponse($entry);
-            if (!empty($userName)) {
-              $account = $this->entityTypeManager
-                       ->getStorage('user')
-                       ->loadByProperties(['name' => $userName]);
-              if (is_array($account)) {
-                $account = reset($account);
+            $imgFieldList = $user->get('user_picture');
+            if ($imgFieldList) {
+              $img = $imgFieldList->first();
+              if ($img) {
+                $userImageUri = $img->entity->getFileUri();
+                $userImageLink = file_create_url($userImageUri);
               }
             }
-          }
-
-          if ($account) {
-            $userPageLink = $account->toUrl()->toString();
           }
         }
 
@@ -473,6 +477,7 @@ class DirectoryQuery {
           'dn' => $dn,
           'emailLink' => $emailLink,
           'userPageLink' => $userPageLink,
+          'userImageLink' => $userImageLink,
           'rank' => 0,
 
         ] + $attributes;

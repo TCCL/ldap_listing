@@ -42,7 +42,9 @@ class DirectorySectionFieldItem extends FieldItemBase {
 
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_def) {
     $properties = [];
-    $properties['value'] = DataDefinition::create('string');
+    $properties['value'] = DataDefinition::create('string')
+                         ->setLabel('LDAP Listing Section ID')
+                         ->setDescription('The config entity ID of the LDAP Listing section.');
 
     return $properties;
   }

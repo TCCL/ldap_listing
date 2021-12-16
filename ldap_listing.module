@@ -78,6 +78,9 @@ function ldap_listing_entity_extra_field_info() {
   return $extra;
 }
 
+/**
+ * Implements hook_ENTITY_view().
+ */
 function ldap_listing_user_view(array &$build,
                                 EntityInterface $entity,
                                 EntityViewDisplayInterface $display,

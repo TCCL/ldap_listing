@@ -57,9 +57,11 @@ function ldap_listing_cron() {
  */
 function ldap_listing_entity_extra_field_info() {
   $extra = [];
+  $routeName = \Drupal::routeMatch()->getRouteName();
 
   $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
-  if ($config->get('link_to_user_page')) {
+  if ($routeName == 'entity.user.canonical' && $config->get('link_to_user_page')) {
+
     $fields = [];
 
     $attrs = $config->get('user_page_attributes');
@@ -89,9 +91,10 @@ function ldap_listing_user_view(array &$build,
                                 $viewMode)
 {
   $build['#cache']['tags'][] = DirectoryQuery::CACHE_TAG;
+  $routeName = \Drupal::routeMatch()->getRouteName();
   $config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
 
-  if ($config->get('link_to_user_page')) {
+  if ($routeName == 'entity.user.canonical' && $config->get('link_to_user_page')) {
     try {
       $userQuery = \Drupal::service('ldap_listing.user');
       $extraFields = $userQuery->query($entity);

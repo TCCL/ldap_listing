@@ -102,6 +102,7 @@ class DirectoryPage extends ControllerBase {
           'j' => $entry['title'] ?? null,
           'p' => $entry['phone'] ?? null,
           'e' => $entry['email'] ?? null,
+          'l' => $entry['userPageLink'] ?? null,
         ];
       }
     }

@@ -76,7 +76,7 @@
   > .directory-listing-search-result-row
   > .directory-listing-search-result-cell
 {
-  flex: 0.25;
+  flex: 1;
 }
 
 .ldap-listing-directory-listing
@@ -352,18 +352,9 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper,
+  .mail-link-wrapper,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
 {
   position: relative;
   margin: 0 auto;
@@ -372,19 +363,10 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
   > .mail-link,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
   > .mail-link
 {
   position: absolute;
@@ -399,19 +381,16 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:hover
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .user-entry:hover
+  .mail-link-wrapper
+  > .mail-link,
+.ldap-listing-directory-listing
+  .directory-listing-search-result-row:hover
+  .mail-link-wrapper
   > .mail-link,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:hover
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .user-entry:hover
+  .mail-link-wrapper:hover
   > .mail-link
 {
   visibility: visible;

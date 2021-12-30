@@ -208,8 +208,9 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $parser->makeText(),
       '#description' => (
         'The list of LDAP attributes to fetch and render on the user profile '
-        . 'page if enabled. Attribute names should be comma-separated and/or '
-        . 'line-separated.'
+        . 'page if enabled. Each line is a comma-separated pair '
+        . '- <i>Attribute Label</i>,<i>attributeName</i> - denoting the label '
+        . 'for the attribute and its LDAP name. Example: <i>Email Address,mail</i>'
       ),
       '#cols' => 80,
       '#rows' => 5,

@@ -64,6 +64,10 @@ class DirectoryPage extends ControllerBase {
       throw new NotFoundHttpException;
     }
 
+    if (empty($sections)) {
+      throw new NotFoundHttpException;
+    }
+
     $render = [
       '#theme' => 'ldap_listing_directory_listing',
       '#sections' => $sections,

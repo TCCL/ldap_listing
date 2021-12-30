@@ -66,6 +66,10 @@
               <div class="error">
                 <div>An error occurred and this section of the directory could not be loaded.</div>
               </div>
+            {% elseif section.body is empty %}
+              <div class="empty">
+                <span>No results</span>
+              </div>
             {% endif %}
 
             {% for user in section.body %}

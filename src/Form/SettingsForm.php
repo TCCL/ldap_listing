@@ -16,7 +16,7 @@ use Drupal\ldap_listing\Support\EntryParser;
 
 class SettingsForm extends ConfigFormBase {
   const CONFIG_OBJECT = 'ldap_listing.settings';
-  const UNSET = 'ldap_listing_unset_5a3ab8bf41b4910d7861ee419d24ed32b2d4e6a7';
+  const UNSET = '';
 
   /**
    * {@inheritdoc}

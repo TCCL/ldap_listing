@@ -112,11 +112,28 @@
   .heading
 {
   background-color: #eee;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-weight: bold;
-  padding: 10px 0 10px 5px;
+  padding: 10px 5px;
   border: 2px solid black;
   border-radius: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .heading
+  .abbrev,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .heading
+  .abbrev
+{
+  font-size: 1.25rem;
 }
 
 .ldap-listing-directory-listing

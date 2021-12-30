@@ -31,12 +31,8 @@ function makeRow(entry) {
     matchesMap[match.key] = match;
   }
 
-  let mailto = "";
-  if (entry.item.e) {
-    mailto = "mailto:" + entry.item.e;
-  }
-
-  row.append(makeCell(entry.item.n,matchesMap["n"],mailto));
+  row.append(makeCell(entry.item.n,matchesMap["n"],entry.item.l));
+  row.append(makeEmailCell(entry.item.e));
   row.append(makeCell(entry.item.j,matchesMap["j"]));
   row.append(makeCell(entry.item.p,matchesMap["p"]));
   row.append(makeCell(entry.item.d,matchesMap["d"]));
@@ -45,12 +41,11 @@ function makeRow(entry) {
 }
 
 function makeCell(inner,match,href) {
-  const cell = jQuery("<div>")
-        .addClass("directory-listing-search-result-cell");
+  const cell = jQuery("<div>").addClass("directory-listing-search-result-cell");
 
   let elem;
   if (href) {
-    elem = jQuery("<a>").attr("href",href);
+    elem = jQuery("<a>").attr("href",href).attr("target","_blank");
   }
   else {
     elem = jQuery("<span>");
@@ -89,6 +84,23 @@ function makeCell(inner,match,href) {
   cell.append(elem);
 
   return cell;
+}
+
+function makeEmailCell(email) {
+  const elem = jQuery("<div>").addClass("directory-listing-search-result-cell");
+  const wrapper = jQuery("<div>").addClass("mail-link-wrapper");
+
+  elem.append(wrapper);
+
+  if (email) {
+    const a = jQuery("<a>");
+    const mailto = "mailto:" + email;
+
+    a.text("✉").addClass("mail-link").attr("href",mailto).attr("title",email);
+    wrapper.append(a);
+  }
+
+  return elem;
 }
 
 jQuery(document).ready(($) => {

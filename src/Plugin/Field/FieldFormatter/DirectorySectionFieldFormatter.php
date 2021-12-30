@@ -10,6 +10,7 @@ namespace Drupal\ldap_listing\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\ldap_listing\Exception;
 use Drupal\ldap_listing\DirectoryQuery;
 
 /**
@@ -33,8 +34,21 @@ class DirectorySectionFieldFormatter extends FormatterBase {
 
     $elements = [];
     foreach ($items as $index => $item) {
-      $sectionId = $item->value;
-      $section = $query->querySectionCached($sectionId);
+      try {
+        $sectionId = $item->value;
+        $section = $query->querySectionCached($sectionId);
+      } catch (Exception $ex) {
+        $section = [
+          'id' => $sectionId,
+          'label' => "Error: Failed loading '$sectionId'",
+          'abbrev' => '!',
+          'error' => true,
+          'header' => [],
+          'body' => [],
+          'footer' => [],
+          'weight' => -1,
+        ];
+      }
 
       $elements[$index] = [
         '#theme' => 'ldap_listing_directory_listing_field',

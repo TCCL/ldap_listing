@@ -76,7 +76,7 @@
   > .directory-listing-search-result-row
   > .directory-listing-search-result-cell
 {
-  flex: 0.25;
+  flex: 1;
 }
 
 .ldap-listing-directory-listing
@@ -112,11 +112,28 @@
   .heading
 {
   background-color: #eee;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-weight: bold;
-  padding: 10px 0 10px 5px;
+  padding: 10px 5px;
   border: 2px solid black;
   border-radius: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .heading
+  .abbrev,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .heading
+  .abbrev
+{
+  font-size: 1.25rem;
 }
 
 .ldap-listing-directory-listing
@@ -232,13 +249,30 @@
   .body
   > .error
 {
-  margin: 2em;
+  padding: 2em;
   background-color: #eb8d8d;
-  padding: 1em;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
+  justify-content: center;
   font-size: 18px;
   border-radius: 0.5em;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-sections
+  > .directory-listing-section-wrapper
+  .body
+  > .empty,
+.ldap-listing-directory-listing-field
+  > .directory-listing-section-wrapper
+  .body
+  > .empty
+{
+  padding: 2em;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  font-size: 18px;
 }
 
 .ldap-listing-directory-listing
@@ -318,18 +352,9 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper,
+  .mail-link-wrapper,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
 {
   position: relative;
   margin: 0 auto;
@@ -338,19 +363,10 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
   > .mail-link,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .mail-link-wrapper
   > .mail-link
 {
   position: absolute;
@@ -365,19 +381,16 @@
 }
 
 .ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:hover
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .user-entry:hover
+  .mail-link-wrapper
+  > .mail-link,
+.ldap-listing-directory-listing
+  .directory-listing-search-result-row:hover
+  .mail-link-wrapper
   > .mail-link,
 .ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:hover
-  > .user-entry-item.name
-  > .mail-link-wrapper
+  .user-entry:hover
+  .mail-link-wrapper:hover
   > .mail-link
 {
   visibility: visible;

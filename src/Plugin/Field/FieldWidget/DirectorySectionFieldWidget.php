@@ -34,13 +34,26 @@ class DirectorySectionFieldWidget extends WidgetBase {
     array &$form,
     FormStateInterface $form_state)
   {
-    $element['value'] = [
-      '#type' => 'select',
-      '#title' => 'LDAP Directory Section',
-      '#options' => $this->makeOptions(),
-      '#sort_options' => true,
-      '#default_value' => $items[$delta]->value ?? 0,
-    ];
+    $options = $this->makeOptions();
+
+    if (empty($options)) {
+      $element['value'] = $element + [
+        '#type' => 'select',
+        '#options' => [],
+        '#empty_option' => '- No Options -',
+        '#sort_options' => true,
+        '#default_value' => $items[$delta]->value ?? 0,
+      ];
+    }
+    else {
+      $element['value'] = $element + [
+        '#type' => 'select',
+        '#options' => $options,
+        '#sort_options' => true,
+        '#empty_option' => '- None -',
+        '#default_value' => $items[$delta]->value ?? 0,
+      ];
+    }
 
     return $element;
   }
@@ -52,6 +65,10 @@ class DirectorySectionFieldWidget extends WidgetBase {
     $options = [];
 
     $sections = $storage->getQuery()->execute();
+    if (empty($sections)) {
+      return [];
+    }
+
     foreach ($sections as $sectionId) {
       $section = $storage->load($sectionId);
       if (!isset($section)) {

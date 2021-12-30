@@ -43,9 +43,9 @@
       <div class="directory-listing-section-wrapper">
         <div class="directory-listing-section">
           <div class="heading">
-            <span class="label">{{ section.label }}</span>
+            <span>{{ section.label }}</span>
             {% if section.abbrev %}
-              <span> (<span class="abbrev">{{ section.abbrev }}</span>)</span>
+              <span class="abbrev">{{ section.abbrev }}</span>
             {% endif %}
           </div>
 
@@ -65,6 +65,10 @@
             {% if section.error %}
               <div class="error">
                 <div>An error occurred and this section of the directory could not be loaded.</div>
+              </div>
+            {% elseif section.body is empty %}
+              <div class="empty">
+                <span>No results</span>
               </div>
             {% endif %}
 

@@ -121,9 +121,11 @@ class DirectoryQuery {
 
     $this->config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
     $serverId = $this->config->get('ldap_server');
-    $this->ldapServer = $entityTypeManager
-                      ->getStorage('ldap_server')
-                      ->load($serverId);
+    if ($serverId != SettingsForm::UNSET) {
+      $this->ldapServer = $entityTypeManager
+                        ->getStorage('ldap_server')
+                        ->load($serverId);
+    }
 
     // Prepare attribute map.
     foreach (self::$ATTRS as $key => $name) {
@@ -142,7 +144,7 @@ class DirectoryQuery {
     }
 
     // Pull extra user ID attributes if user profile page linking is enabled.
-    if ($this->config->get('link_to_user_page')) {
+    if ($this->config->get('link_to_user_page') && isset($this->ldapServer)) {
       $accountNameAttr = $this->ldapServer->getAccountNameAttribute();
       $authAttr = $this->ldapServer->getAuthenticationNameAttribute();
 
@@ -180,6 +182,10 @@ class DirectoryQuery {
    * listing queries and that a connection could be bound.
    */
   public function bind() : void {
+    if (!isset($this->ldapServer)) {
+      return;
+    }
+
     $this->ldapBridge->setServerById($this->ldapServer->get('id'));
     if (!$this->ldapBridge->bind()) {
       throw new Exception('Cannot bind to LDAP server');

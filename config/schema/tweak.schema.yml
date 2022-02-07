@@ -1,0 +1,39 @@
+ldap_listing.tweak.*:
+  type: config_entity
+  label: 'Directory Listing Tweak'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name for this directory listing tweak configuration'
+    uuid:
+      type: string
+    section_id:
+      type: string
+      label: 'The section to which this tweak is applied'
+    user_dn:
+      type: string
+      label: 'DN of user to manipulate with this tweak'
+    name_override:
+      type: string
+      label: 'Alternate name to override LDAP attribute value'
+    phone_override:
+      type: string
+      label: 'Alternate phone to override LDAP attribute value'
+    email_override:
+      type: string
+      label: 'Alternate email to override LDAP attribute value'
+    job_title_override:
+      type: string
+      label: 'Alternate job title to override LDAP attribute value'
+    position_before_user_dn:
+      type: string
+      label: 'DN of the user before which the tweaked user will be positioned'
+    position_after_user_dn:
+      type: string
+      label: 'DN of the user after which the tweaked user will be positioned'
+    absolute_position:
+      type: integer
+      label: 'Absolute position of user within section listing'
+    exclude:
+      type: boolean
+      label: 'Determines whether the user is excluded from the listing'

@@ -79,7 +79,7 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
    * {@inheritdoc}
    */
   public function getGroupDN() : string {
-    return $this->get('group_dn')->value;
+    return $this->get('group_dn');
   }
 
   /**

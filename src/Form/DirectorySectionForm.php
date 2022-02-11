@@ -117,7 +117,7 @@ class DirectorySectionForm extends EntityForm {
     $status = $this->entity->save();
 
     if ($status == SAVED_NEW) {
-      $this->messenger()->addMessage($this->t('Create section %label',[
+      $this->messenger()->addMessage($this->t('Created section %label',[
         '%label' => $this->entity->label(),
       ]));
     }

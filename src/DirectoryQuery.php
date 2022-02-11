@@ -58,6 +58,11 @@ class DirectoryQuery {
   private $config;
 
   /**
+   * @var \Drupal\ldap_listing\TweakManager
+   */
+  private $tweakManager;
+
+  /**
    * @var \Drupal\ldap_servers\LdapBridgeInterface
    */
   private $ldapBridge;
@@ -110,11 +115,15 @@ class DirectoryQuery {
    * Creates a new DirectoryQuery instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @param \Drupal\ldap_servers\LdapBridgeInterface
+   * @param \Drupal\ldap_listing\TweakManager
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    LdapBridgeInterface $ldapBridge)
+    LdapBridgeInterface $ldapBridge,
+    TweakManager $tweakManager)
   {
+    $this->tweakManager = $tweakManager;
     $this->ldapBridge = $ldapBridge;
     $this->entityTypeManager = $entityTypeManager;
     $this->storage = $entityTypeManager->getStorage('ldap_listing_directory_section');
@@ -302,6 +311,7 @@ class DirectoryQuery {
       // Format entries; extract and format header/footer information.
 
       $body = $this->formatUserEntries($entries);
+      $this->tweakManager->applyTweaksToSection($body,$sectionId);
       $header = $section->get('header_entries');
       $footer = $section->get('footer_entries');
 

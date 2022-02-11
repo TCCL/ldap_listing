@@ -136,4 +136,31 @@ class Tweak extends ConfigEntityBase implements TweakInterface {
   public function isExcluded() : bool {
     return $this->get('exclude') ?? false;
   }
+
+  /**
+   * Gets the complete tweak info in a single array.
+   *
+   * @return array
+   */
+  public function getTweakInfo() : array {
+    $info = [
+      'overrides' => [
+        'name' => $this->nameOverride(),
+        'phone' => $this->phoneOverride(),
+        'email' => $this->emailOverride(),
+        'jobTitle' => $this->jobTitleOverride(),
+      ],
+
+      'relativeToUser' => [
+        'before' => $this->positionBeforeUserDN(),
+        'after' => $this->positionAfterUserDN(),
+      ],
+
+      'absolutePosition' => $this->absolutePosition(),
+
+      'isExcluded' => $this->isExcluded(),
+    ];
+
+    return $info;
+  }
 }

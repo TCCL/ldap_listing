@@ -16,7 +16,7 @@ interface TweakInterface extends ConfigEntityInterface {
    *
    * @return string
    */
-  public function sectionId() : string;
+  public function sectionId() : ?string;
 
   /**
    * Gets the distinguished name of the user modified by the tweak.
@@ -75,7 +75,7 @@ interface TweakInterface extends ConfigEntityInterface {
    *
    * @return int
    */
-  public function absolutePosition() : int;
+  public function absolutePosition() : ?int;
 
   /**
    * Determines if the tweak excludes the user from the section listing.

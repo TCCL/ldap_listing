@@ -27,6 +27,18 @@ function ldap_listing_update_9101() {
 }
 
 /**
+ * Install new config entity type for tweaks.
+ */
+function ldap_listing_update_9102() {
+  $entityTypeManager = \Drupal::entityTypeManager();
+  $entityTypeManager->clearCachedDefinitions();
+  $entityType = $entityTypeManager->getDefinition('ldap_listing_tweak');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entityType);
+
+  return t('Installed the ldap_listing_tweak config entity type');
+}
+
+/**
  * Local Variables:
  * mode:php
  * End:

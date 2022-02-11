@@ -22,7 +22,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *       "delete" = "Drupal\ldap_listing\Form\TweakDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider"
+ *       "default" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider"
  *     }
  *   },
  *   config_prefix = "tweak",
@@ -41,6 +41,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   config_export = {
  *     "id",
  *     "uuid",
+ *     "label",
+ *     "section_id",
  *     "user_dn",
  *     "name_override",
  *     "phone_override",
@@ -48,78 +50,90 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "job_title_override",
  *     "position_before_user_dn",
  *     "position_after_user_dn",
+ *     "absolute_position",
  *     "exclude"
  *   }
  * )
  */
 class Tweak extends ConfigEntityBase implements TweakInterface {
+  protected $section_id;
+  protected $user_dn;
+  protected $name_override;
+  protected $phone_override;
+  protected $email_override;
+  protected $job_title_override;
+  protected $position_before_user_dn;
+  protected $position_after_user_dn;
+  protected $absolute_position;
+  protected $exclude;
+
   /**
    * {@inheritdoc}
    */
-  public function sectionId() : string {
-    return $this->get('section_id')->value;
+  public function sectionId() : ?string {
+    return $this->get('section_id');
   }
 
   /**
    * {@inheritdoc}
    */
   public function userDn() : string {
-    return $this->get('user_dn')->value;
+    return $this->get('user_dn') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function nameOverride() : string {
-    return $this->get('name_override')->value;
+    return $this->get('name_override') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function phoneOverride() : string {
-    return $this->get('phone_override')->value;
+    return $this->get('phone_override') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function emailOverride() : string {
-    return $this->get('email_override')->value;
+    return $this->get('email_override') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function jobTitleOverride() : string {
-    return $this->get('job_title_override')->value;
+    return $this->get('job_title_override') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function positionBeforeUserDN() : string {
-    return $this->get('position_before_user_dn')->value;
+    return $this->get('position_before_user_dn') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function positionAfterUserDN() : string {
-    return $this->get('position_after_user_dn')->value;
+    return $this->get('position_after_user_dn') ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function absolutePosition() : int {
-    return $this->get('absolute_position')->value;
+  public function absolutePosition() : ?int {
+    return $this->get('absolute_position');
   }
 
   /**
    * {@inheritdoc}
    */
   public function isExcluded() : bool {
-    return $this->get('excluded')->value;
+    return $this->get('exclude') ?? false;
   }
 }

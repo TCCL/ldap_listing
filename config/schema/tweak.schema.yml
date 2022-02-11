@@ -7,6 +7,9 @@ ldap_listing.tweak.*:
       label: 'Machine name for this directory listing tweak configuration'
     uuid:
       type: string
+    label:
+      type: string
+      label: 'Label for this tweak'
     section_id:
       type: string
       label: 'The section to which this tweak is applied'

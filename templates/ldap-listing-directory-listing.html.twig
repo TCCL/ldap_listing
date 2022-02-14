@@ -24,6 +24,8 @@
  *     - phone: The user's phone number
  *   - footer: List of lists containing footer item values
  *   - weight: The weight value assigned to this section
+ * - preamble_message_lines: Array of lines to output containing the preamble message
+ * - last_generated_message: Text representation of last generated date
  */
 #}
 
@@ -36,6 +38,14 @@
     <script id="ldap-listing-directory-listing-manifest" type="application/json">{{ manifest|json_encode()|raw }}</script>
 
     <div id="ldap-listing-directory-listing-results-region" class="directory-listing-search-results"></div>
+
+    {% if preamble_message_lines %}
+      <div class="directory-listing-preamble-wrapper">
+        {% for line in preamble_message_lines %}
+          <p>{{ line }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 
   <div class="directory-listing-sections">

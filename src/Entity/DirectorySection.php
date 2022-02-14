@@ -51,6 +51,7 @@ use Drupal\ldap_listing\Support\EntryParser;
  *     "depth",
  *     "header_entries",
  *     "footer_entries",
+ *     "exclude_from_directory",
  *     "weight"
  *   }
  * )
@@ -79,7 +80,7 @@ class DirectorySection extends ConfigEntityBase implements DirectorySectionInter
    * {@inheritdoc}
    */
   public function getGroupDN() : string {
-    return $this->get('group_dn')->value;
+    return $this->get('group_dn');
   }
 
   /**

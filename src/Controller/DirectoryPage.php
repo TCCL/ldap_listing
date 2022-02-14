@@ -9,6 +9,7 @@
 namespace Drupal\ldap_listing\Controller;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\ldap_listing\DirectoryQuery;
 use Drupal\ldap_listing\Exception;
@@ -58,7 +59,9 @@ class DirectoryPage extends ControllerBase {
 
     try {
       $this->query->bind();
+      $flag = $this->query->setExcludeFromDirectory(true);
       $sections = $this->query->queryAllCached($time);
+      $this->query->setExcludeFromDirectory($flag);
 
     } catch (Exception $ex) {
       throw new NotFoundHttpException;
@@ -68,10 +71,18 @@ class DirectoryPage extends ControllerBase {
       throw new NotFoundHttpException;
     }
 
+    $preambleMessageLines = [];
+    $preambleRaw = $this->config->get('preamble');
+    $preambleLinesRaw = preg_split('/\r\n|\r|\n/',$preambleRaw);
+    foreach (array_filter($preambleLinesRaw) as $line) {
+      $preambleMessageLines[] = new HtmlEscapedText($line);
+    }
+
     $render = [
       '#theme' => 'ldap_listing_directory_listing',
       '#sections' => $sections,
       '#manifest' => self::createManifestFromSections($sections),
+      '#preamble_message_lines' => $preambleMessageLines,
       '#last_generated_message' => (
         date('F jS \a\t g:i A',$time)
       ),

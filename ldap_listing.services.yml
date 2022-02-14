@@ -3,8 +3,12 @@
 services:
   ldap_listing.query:
     class: '\Drupal\ldap_listing\DirectoryQuery'
-    arguments: ['@entity_type.manager','@ldap.bridge']
+    arguments: ['@entity_type.manager','@ldap.bridge','@ldap_listing.tweak_manager']
 
   ldap_listing.user:
     class: '\Drupal\ldap_listing\UserQuery'
     arguments: ['@entity_type.manager','@ldap.bridge','@externalauth.authmap']
+
+  ldap_listing.tweak_manager:
+    class: '\Drupal\ldap_listing\TweakManager'
+    arguments: ['@entity_type.manager']

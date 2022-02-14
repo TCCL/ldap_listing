@@ -57,3 +57,6 @@ ldap_listing.settings:
           attribute_name:
             type: string
             label: 'The attribute name'
+    preamble:
+      type: text
+      label: 'Preamble message to display on directory page'

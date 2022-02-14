@@ -34,6 +34,7 @@ function ldap_listing_theme($existing,$type,$theme,$path) {
       'variables' => [
         'manifest' => [],
         'sections' => [],
+        'preamble_message_lines' => [],
         'last_generated_message' => 'No information is available at this time.',
       ],
     ],

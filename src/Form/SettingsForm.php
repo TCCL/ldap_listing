@@ -216,6 +216,16 @@ class SettingsForm extends ConfigFormBase {
       '#rows' => 5,
     ];
 
+    $form['preamble'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Preamble Message'),
+      '#description' => $this->t(
+        'Optional preamble message to display on directory page.'
+      ),
+      '#cols' => 80,
+      '#rows' => 5,
+    ];
+
     return parent::buildForm($form,$form_state);
   }
 
@@ -304,6 +314,7 @@ class SettingsForm extends ConfigFormBase {
       'invalidate_time' => 'invalidate_time',
       'link_to_user_page' => 'link_to_user_page',
       'user_page_attributes' => 'user_page_attributes',
+      'preamble' => 'preamble',
     ];
 
     foreach ($entries as $formKey => $configKey) {

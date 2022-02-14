@@ -6,6 +6,12 @@ entity.ldap_listing_directory_section.collection:
   description: 'Configure LDAP directory listing sections'
   parent: system.admin_structure
 
+entity.ldap_listing_tweak.collection:
+  title: 'LDAP Directory Listing Tweaks'
+  route_name: entity.ldap_listing_tweak.collection
+  description: 'Configure tweaks for LDAP directory listing sections'
+  parent: system.admin_structure
+
 ldap_listing.settings:
   title: 'LDAP directory listing'
   route_name: ldap_listing.settings_page

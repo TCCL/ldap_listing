@@ -58,6 +58,11 @@ class DirectoryQuery {
   private $config;
 
   /**
+   * @var \Drupal\ldap_listing\TweakManager
+   */
+  private $tweakManager;
+
+  /**
    * @var \Drupal\ldap_servers\LdapBridgeInterface
    */
   private $ldapBridge;
@@ -107,14 +112,26 @@ class DirectoryQuery {
   private $userMappingManager;
 
   /**
+   * Determines whether sections are excluded in queryAll() when
+   * exclude_from_directory is set on the section config.
+   *
+   * @var bool
+   */
+  private $checkExcludeFromDirectory = false;
+
+  /**
    * Creates a new DirectoryQuery instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @param \Drupal\ldap_servers\LdapBridgeInterface
+   * @param \Drupal\ldap_listing\TweakManager
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    LdapBridgeInterface $ldapBridge)
+    LdapBridgeInterface $ldapBridge,
+    TweakManager $tweakManager)
   {
+    $this->tweakManager = $tweakManager;
     $this->ldapBridge = $ldapBridge;
     $this->entityTypeManager = $entityTypeManager;
     $this->storage = $entityTypeManager->getStorage('ldap_listing_directory_section');
@@ -193,6 +210,21 @@ class DirectoryQuery {
   }
 
   /**
+   * Sets the exclude from directory page flag that filters sections in
+   * queryAll().
+   *
+   * @param bool $value
+   *
+   * @return
+   *  Returns the previous value of the flag.
+   */
+  public function setExcludeFromDirectory(bool $value) : bool {
+    $prev = $this->checkExcludeFromDirectory;
+    $this->checkExcludeFromDirectory = $value;
+    return $prev;
+  }
+
+  /**
    * Queries all directory listing sections. The query is cached for later
    * lookup so a future call to this method may retrieve cached data.
    *
@@ -203,13 +235,27 @@ class DirectoryQuery {
    */
   public function queryAllCached(&$time,bool $forceInvalidate = false) : array {
     if (!$forceInvalidate) {
+      $prev = $this->setExcludeFromDirectory(false);
       $sections = $this->getCached($time);
+      $this->setExcludeFromDirectory($prev);
     }
 
     if (!isset($sections)) {
       // Query data from LDAP if nothing was pulled from cache.
       $sections = $this->queryAll();
       $this->setCached($time,$sections);
+    }
+
+    // Filter by exclude flag if enabled.
+    if ($this->checkExcludeFromDirectory) {
+      $sections = array_filter(
+        $sections,
+        function(array $section) {
+          return !$section['excludeFromDirectory'];
+        }
+      );
+
+      $sections = array_values($sections);
     }
 
     return $sections;
@@ -227,6 +273,18 @@ class DirectoryQuery {
     $results = [];
     foreach ($sections as $sectionId) {
       $results[] = $this->querySection($sectionId);
+    }
+
+    // Filter by exclude flag if enabled.
+    if ($this->checkExcludeFromDirectory) {
+      $results = array_filter(
+        $results,
+        function(array $section) {
+          return !$section['excludeFromDirectory'];
+        }
+      );
+
+      $results = array_values($results);
     }
 
     // Sort by configured weighting.
@@ -302,6 +360,7 @@ class DirectoryQuery {
       // Format entries; extract and format header/footer information.
 
       $body = $this->formatUserEntries($entries);
+      $this->tweakManager->applyTweaksToSection($body,$sectionId);
       $header = $section->get('header_entries');
       $footer = $section->get('footer_entries');
 
@@ -326,6 +385,7 @@ class DirectoryQuery {
       'body' => $body,
       'footer' => $footer,
       'weight' => $section->getWeight(),
+      'excludeFromDirectory' => $section->get('exclude_from_directory'),
     ];
   }
 

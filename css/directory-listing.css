@@ -11,7 +11,7 @@
 .ldap-listing-directory-listing
   > .directory-listing-top-matter
 {
-  margin: 30px 0 30px 0;
+  margin: 30px 7.5%;
 }
 
 .ldap-listing-directory-listing
@@ -28,7 +28,7 @@
   > .directory-listing-search-box-wrapper
   > .directory-listing-search-box
 {
-  flex: 0 0 85%;
+  flex: 1;
 }
 
 .ldap-listing-directory-listing
@@ -36,7 +36,7 @@
   > .directory-listing-search-results
 {
   padding: 10px;
-  margin: 15px 7.5% 0 7.5%;
+  margin: 15px 0;
   border: 3px solid #eee;
   border-radius: 10px;
 }
@@ -46,6 +46,7 @@
   > .directory-listing-search-results:empty
 {
   visibility: hidden;
+  margin: 0;
 }
 
 .ldap-listing-directory-listing
@@ -77,6 +78,13 @@
   > .directory-listing-search-result-cell
 {
   flex: 1;
+}
+
+.ldap-listing-directory-listing
+  > .directory-listing-top-matter
+  > .directory-listing-preamble-wrapper
+{
+  font-style: italic;
 }
 
 .ldap-listing-directory-listing

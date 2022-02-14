@@ -58,7 +58,9 @@ class DirectoryPage extends ControllerBase {
 
     try {
       $this->query->bind();
+      $flag = $this->query->setExcludeFromDirectory(true);
       $sections = $this->query->queryAllCached($time);
+      $this->query->setExcludeFromDirectory($flag);
 
     } catch (Exception $ex) {
       throw new NotFoundHttpException;

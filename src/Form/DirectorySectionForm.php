@@ -95,6 +95,16 @@ class DirectorySectionForm extends EntityForm {
       '#rows' => 5,
     ];
 
+    $form['directory_section']['exclude_from_directory'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Exclude From Directory Page'),
+      '#description' => $this->t(
+        'Determines if the section is excluded from the directory page. Note: the section '
+        . 'can still be rendered in a field element when excluded from the directory page.'
+      ),
+      '#default_value' => $this->entity->get('exclude_from_directory') ?? false,
+    ];
+
     $form['directory_section']['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Weight'),

@@ -51,6 +51,7 @@ use Drupal\ldap_listing\Support\EntryParser;
  *     "depth",
  *     "header_entries",
  *     "footer_entries",
+ *     "exclude_from_directory",
  *     "weight"
  *   }
  * )

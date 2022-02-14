@@ -50,7 +50,8 @@ class TweakManager {
       return;
     }
 
-    $copy = $entries;
+    $copy = self::makeShallowCopy($entries);
+
     foreach (array_keys($copy) as $index) {
       $this->applyTweaksToEntryImpl($entries,$copy[$index],$tweaks);
     }
@@ -156,6 +157,14 @@ class TweakManager {
     foreach ($configObjects as $id => $tweak) {
       $this->tweaks[ $tweak->sectionId() ][] = $tweak;
     }
+  }
+
+  private static function makeShallowCopy(array &$source) : array {
+    $copy = [];
+    foreach ($source as $key => &$value) {
+      $copy[$key] =& $value;
+    }
+    return $copy;
   }
 
   private static function arraySearchKey(array $needle,array $haystack,$key) {

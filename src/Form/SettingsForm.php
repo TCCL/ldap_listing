@@ -219,6 +219,7 @@ class SettingsForm extends ConfigFormBase {
     $form['preamble'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Preamble Message'),
+      '#default_value' => $config->get('preamble'),
       '#description' => $this->t(
         'Optional preamble message to display on directory page.'
       ),

@@ -11,3 +11,11 @@ entity.ldap_listing_tweak.add_form:
   title: 'Add New Tweak'
   appears_on:
     - entity.ldap_listing_tweak.collection
+
+ldap_listing.clear_cache:
+  route_name: ldap_listing.clear_cache
+  title: 'Invalidate Cache'
+  appears_on:
+    - entity.ldap_listing_directory_section.collection
+    - entity.ldap_listing_tweak.collection
+    - ldap_listing.settings_page

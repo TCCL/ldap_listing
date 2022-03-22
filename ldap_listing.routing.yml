@@ -15,3 +15,10 @@ ldap_listing.directory_page:
     _title_callback: '\Drupal\ldap_listing\Controller\DirectoryPage::getTitle'
   requirements:
     _permission: 'access content'
+
+ldap_listing.clear_cache:
+  path: '/ldap_listing/cache-clear'
+  defaults:
+    _controller: '\Drupal\ldap_listing\Controller\CacheClear::clearCache'
+  requirements:
+    _permission: 'administer ldap_listing'

@@ -28,68 +28,68 @@
  */
 #}
 
-<div class="ldap-listing-directory-listing-field">
-  <div class="directory-listing-section-wrapper">
-    <div class="directory-listing-section">
-      <div class="heading">
+<div class="ldap-listing-field">
+  <div class="ldap-listing-section">
+    <div class="ldap-listing-section__inner">
+      <div class="ldap-listing-section__heading">
         <span>{{ section.label }}</span>
         {% if section.abbrev %}
-          <span class="abbrev">{{ section.abbrev }}</span>
+          <span class="ldap-listing-section__heading-abbrev">{{ section.abbrev }}</span>
         {% endif %}
       </div>
 
       {% if section.header %}
-        <div class="header header-footer">
+        <div class="ldap-listing-section__header-footer">
           {% for entry in section.header %}
-            <div class="entry">
+            <div class="ldap-listing-section__header-footer-entry">
               {% for item in entry %}
-                <div class="entry-item">{{ item }}</div>
+                <div class="ldap-listing-section__header-footer-entry-item">{{ item }}</div>
               {% endfor %}
             </div>
           {% endfor %}
         </div>
       {% endif %}
 
-      <div class="body">
+      <div class="ldap-listing-section__body">
         {% if section.error %}
-          <div class="error">
+          <div class="ldap-listing-section__body-error">
             <span>An error occurred and this section of the directory could not be loaded.</span>
           </div>
         {% elseif section.body is empty %}
-          <div class="empty">
+          <div class="ldap-listing-section__body-empty">
             <span>No results</span>
           </div>
         {% endif %}
 
         {% for user in section.body %}
-          <div class="user-entry">
-            <div class="name user-entry-item">
+          <div class="ldap-listing-section__user-entry">
+            <div class="ldap-listing-section__user-entry-item ldap-listing-section__user-entry-item--name">
               {% if user.userPageLink %}
                 <a href="{{ user.userPageLink }}">{{ user.name }}</a>
               {% else %}
                 <span>{{ user.name }}</span>
               {% endif %}
               {% if user.emailLink %}
-                <div class="mail-link-wrapper">
-                  <a href="{{ user.emailLink }}" class="mail-link" title="{{ user.email }}">✉</a>
+                <div class="ldap-listing-mail-link">
+                  <a href="{{ user.emailLink }}" class="ldap-listing-mail-link__anchor" title="{{ user.email }}">✉</a>
                 </div>
               {% endif %}
             </div>
-            <div class="title user-entry-item">{{ user.title }}</div>
-            <div class="phone user-entry-item">{{ user.phone }}</div>
+            <div class="ldap-listing-section__user-entry-item">{{ user.title }}</div>
+            <div class="ldap-listing-section__user-entry-item ldap-listing-section__user-entry-item--phone">{{ user.phone }}</div>
           </div>
         {% endfor %}
       </div>
 
       {% if section.footer %}
-        <div class="footer header-footer">
+        <div class="ldap-listing-section__header-footer">
           {% for entry in section.footer %}
-            <div class="entry">
+            <div class="ldap-listing-section__header-footer-entry">
               {% for item in entry %}
                 {% if not loop.last and entry[loop.index0+1] is null %}
-                <div class="entry-item nowrap">{{ item }}</div>
+                <div class="ldap-listing-section__header-footer-entry-item ldap-listing-section__header-footer-entry-item--nowrap">{{ item }}</div>
                 {% else %}
-                <div class="entry-item">{{ item }}</div>
+                <div class="ldap-listing-section__header-footer-entry-item">{{ item }}</div>
                 {% endif %}
               {% endfor %}
             </div>

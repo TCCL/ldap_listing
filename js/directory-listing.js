@@ -2303,7 +2303,7 @@
   }
 
   function makeRow(entry) {
-    var row = jQuery("<div>").addClass("directory-listing-search-result-row");
+    var row = jQuery("<div>").addClass("ldap-listing-directory__search-result-row");
     var matchesMap = {};
 
     for (var i = 0; i < entry.matches.length; ++i) {
@@ -2320,7 +2320,7 @@
   }
 
   function makeCell(inner, match, href) {
-    var cell = jQuery("<div>").addClass("directory-listing-search-result-cell");
+    var cell = jQuery("<div>").addClass("ldap-listing-directory__search-result-cell");
     var elem;
 
     if (href) {
@@ -2363,14 +2363,14 @@
   }
 
   function makeEmailCell(email) {
-    var elem = jQuery("<div>").addClass("directory-listing-search-result-cell");
-    var wrapper = jQuery("<div>").addClass("mail-link-wrapper");
+    var elem = jQuery("<div>").addClass("ldap-listing-directory__search-result-cell");
+    var wrapper = jQuery("<div>").addClass("ldap-listing-mail-link");
     elem.append(wrapper);
 
     if (email) {
       var a = jQuery("<a>");
       var mailto = "mailto:" + email;
-      a.text("✉").addClass("mail-link").attr("href", mailto).attr("title", email);
+      a.text("✉").addClass("ldap-listing-mail-link__anchor").attr("href", mailto).attr("title", email);
       wrapper.append(a);
     }
 
@@ -2397,12 +2397,12 @@
       threshold: 0.2,
       ignoreLocation: true
     };
-    var $manifest = $("#ldap-listing-directory-listing-manifest");
+    var $manifest = $("#ldap-listing-directory-manifest");
     var manifest = JSON.parse($manifest.html());
     $manifest.remove();
     var fuse = new Fuse(manifest, options);
-    var $results = $("#ldap-listing-directory-listing-results-region");
-    var $search = $("#ldap-listing-directory-listing-search-box");
+    var $results = $("#ldap-listing-directory-results-region");
+    var $search = $("#ldap-listing-directory-search-box");
     var handler = delayEvent(function () {
       $results.empty();
       var text = $search.val();

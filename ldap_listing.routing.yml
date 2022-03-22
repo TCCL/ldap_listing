@@ -1,5 +1,13 @@
 ## ldap_listing.routing.yml
 
+ldap_listing.structure:
+  path: '/admin/structure/ldap_listing'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'LDAP Directory Listing Configuration'
+  requirements:
+    _permission: 'administer ldap_listing'
+
 ldap_listing.settings_page:
   path: '/admin/config/ldap_listing'
   defaults:

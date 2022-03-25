@@ -379,6 +379,7 @@ class DirectoryQuery {
     return [
       'id' => $section->get('id'),
       'label' => $section->get('label'),
+      'description' => $section->get('description'),
       'abbrev' => $section->get('abbrev'),
       'error' => $error,
       'header' => $header,

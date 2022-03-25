@@ -46,6 +46,7 @@ use Drupal\ldap_listing\Support\EntryParser;
  *     "id",
  *     "uuid",
  *     "label",
+ *     "description",
  *     "abbrev",
  *     "group_dn",
  *     "depth",

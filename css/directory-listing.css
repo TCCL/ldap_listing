@@ -93,19 +93,19 @@
 
 .ldap-listing-section__heading {
   background-color: #eee;
-  font-size: 1.5rem;
-  font-weight: bold;
   padding: 10px 5px;
   border: 2px solid black;
   border-radius: 5px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 }
 
-.ldap-listing-section__heading-abbrev {
-  font-size: 1.25rem;
+.ldap-listing-section__heading h2,
+.ldap-listing-section__heading h3 {
+  margin: 0;
+  font-weight: bold;
 }
 
 .ldap-listing-section__header-footer {

@@ -53,9 +53,14 @@
       <div class="ldap-listing-section ldap-listing-directory__section">
         <div class="ldap-listing-section__inner">
           <div class="ldap-listing-section__heading">
-            <span>{{ section.label }}</span>
+            <div>
+              <h2>{{ section.label }}</h2>
+              {% if section.description %}
+                <h3>{{ section.description }}</h3>
+              {% endif %}
+            </div>
             {% if section.abbrev %}
-              <span class="ldap-listing-section__heading-abbrev">{{ section.abbrev }}</span>
+              <h3>{{ section.abbrev }}</h3>
             {% endif %}
           </div>
 

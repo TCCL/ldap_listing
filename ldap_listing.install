@@ -55,6 +55,22 @@ function ldap_listing_update_9103() {
 }
 
 /**
+ * Update directory_section config entity schema.
+ */
+function ldap_listing_update_9104() {
+  $configFactory = \Drupal::configFactory();
+
+  // Add 'description' property to each directory section config.
+  foreach ($configFactory->listAll('ldap_listing.directory_section.') as $name) {
+    $config = $configFactory->getEditable($name);
+    $config->set('description','');
+    $config->save();
+  }
+
+  return t('Updated ldap_listing_directory_section config entities.');
+}
+
+/**
  * Local Variables:
  * mode:php
  * End:

@@ -14,6 +14,33 @@
   margin: 30px 7.5%;
 }
 
+.ldap-listing-directory__pdf-form-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0;
+}
+
+.ldap-listing-directory__pdf-form {
+  flex: 0 0 30%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .ldap-listing-directory__pdf-form {
+    flex: 1;
+  }
+}
+
+.ldap-listing-directory__pdf-form-controls {
+  flex: 1;
+}
+
+.ldap-listing-directory__pdf-form-controls label {
+  display: inline;
+}
+
 .ldap-listing-directory__search-box-wrapper {
   display: flex;
   flex-flow: row nowrap;

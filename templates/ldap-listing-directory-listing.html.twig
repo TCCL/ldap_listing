@@ -26,11 +26,32 @@
  *   - weight: The weight value assigned to this section
  * - preamble_message_lines: Array of lines to output containing the preamble message
  * - last_generated_message: Text representation of last generated date
+ * - pdf: PDF form information
+ *   - enabled: Flag that determines if PDF generation is enabled
+ *   - action: URI of PDF download resource
  */
 #}
 
 <div class="ldap-listing-directory">
   <div class="ldap-listing-directory__top-matter">
+    {% if pdf.enabled %}
+      <div class="ldap-listing-directory__pdf-form-wrapper">
+        <form class="ldap-listing-directory__pdf-form" method="get" action="{{ pdf.action }}">
+          <div class="ldap-listing-directory__pdf-form-controls">
+            <div>
+              <input id="ldap-listing-orient-p" type="radio" name="orient" value="P" checked> <label for="ldap-listing-orient-p">Portrait</label>
+            </div>
+            <div>
+              <input id="ldap-listing-orient-l" type="radio" name="orient" value="L"> <label for="ldap-listing-orient-l">Landscape</label>
+            </div>
+          </div>
+          <div>
+            <input type="submit" value="Download PDF">
+          </div>
+        </form>
+      </div>
+    {% endif %}
+
     <div class="ldap-listing-directory__search-box-wrapper">
       <input id="ldap-listing-directory-search-box" class="ldap-listing-directory__search-box" placeholder="Search name/job/phone/department" type="search">
     </div>

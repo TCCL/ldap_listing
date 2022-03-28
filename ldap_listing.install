@@ -71,6 +71,21 @@ function ldap_listing_update_9104() {
 }
 
 /**
+ * Updates ldap_listing settings object.
+ */
+function ldap_listing_update_9105() {
+  $configFactory = \Drupal::configFactory();
+
+  // Add new properties to ldap_listing.settings.
+  $settings = $configFactory->getEditable('ldap_listing.settings');
+  $settings->set('enable_pdf',false);
+  $settings->set('pdf_class','');
+  $settings->save();
+
+  return t('Added new ldap_listing settings properties');
+}
+
+/**
  * Local Variables:
  * mode:php
  * End:

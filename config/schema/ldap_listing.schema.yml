@@ -60,3 +60,9 @@ ldap_listing.settings:
     preamble:
       type: text
       label: 'Preamble message to display on directory page'
+    enable_pdf:
+      type: text
+      label: 'Determines if PDF generation is enabled on the directory page'
+    pdf_class:
+      type: text
+      label: 'If non-empty, an alternative class for generating the directory PDF'

@@ -227,6 +227,26 @@ class SettingsForm extends ConfigFormBase {
       '#rows' => 5,
     ];
 
+    $form['enable_pdf'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Enable PDF Generation',
+      '#default_value' => $config->get('enable_pdf'),
+      '#description' => (
+        'Enable PDF generation from the directory page.'
+      ),
+    ];
+
+    $form['pdf_class'] = [
+      '#type' => 'textfield',
+      '#title' => 'PDF Document Generation Class',
+      '#default_value' => $config->get('pdf_class'),
+      '#description' => (
+        'Specify the fully-qualified PHP class name of the class that is to handle '
+        . 'PDF generation for the directory page. Leave blank to utilize the default '
+        . 'functionality.'
+      ),
+    ];
+
     return parent::buildForm($form,$form_state);
   }
 
@@ -316,6 +336,8 @@ class SettingsForm extends ConfigFormBase {
       'link_to_user_page' => 'link_to_user_page',
       'user_page_attributes' => 'user_page_attributes',
       'preamble' => 'preamble',
+      'enable_pdf' => 'enable_pdf',
+      'pdf_class' => 'pdf_class',
     ];
 
     foreach ($entries as $formKey => $configKey) {

@@ -16,3 +16,5 @@ invalidate_time: 86400
 link_to_user_page: false
 user_page_attributes: []
 preamble: ''
+enable_pdf: false
+pdf_class: ''

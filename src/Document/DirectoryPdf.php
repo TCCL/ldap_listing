@@ -11,7 +11,7 @@ namespace Drupal\ldap_listing\Document;
 use DateTime;
 use TCPDF;
 
-class DirectoryPdf extends TCPDF {
+class DirectoryPdf extends TCPDF implements DirectoryPdfInterface {
   const PORTRAIT = 'P';
   const LANDSCAPE = 'L';
 
@@ -34,9 +34,7 @@ class DirectoryPdf extends TCPDF {
   }
 
   /**
-   * Gets the file name to use for the generated document.
-   *
-   * @return string
+   * Implements DirectoryPdfInterface::getFileName().
    */
   public function getFileName() : string {
     $ts = $this->directoryPdfTs->format('Ymd');
@@ -46,10 +44,22 @@ class DirectoryPdf extends TCPDF {
   }
 
   /**
-   * Generates the PDF document.
+   * Implements DirectoryPdfInterface::generate().
    */
   public function generate() : void {
 
+  }
+
+  /**
+   * Implements DirectoryPdfInterface::output().
+   */
+  public function output(string $file = '') : void {
+    if (!empty($file)) {
+      $this->Output($file,'F');
+    }
+    else {
+      $this->Output($this->getFileName());
+    }
   }
 
   /**

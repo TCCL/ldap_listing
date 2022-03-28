@@ -15,13 +15,31 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DirectoryPdfPage extends ControllerBase {
+  const DEFAULT_CLASS = '\Drupal\ldap_listing\Document\DirectoryPdf';
+
   /**
    * Determines if the directory PDF can be generated.
    *
    * @return bool
    */
   public static function enabled() : bool {
-    return class_exists('TCPDF');
+    $interface = '\Drupal\ldap_listing\Document\DirectoryPdfInterface';
+    $config = \Drupal::config('ldap_listing.settings');
+
+    if ($config->get('pdf_enabled')) {
+      $class = $config->get('pdf_class') ?? self::DEFAULT_CLASS;
+
+      // Check TCPDF for default class to avoid error.
+      if ($class == self::DEFAULT_CLASS) {
+        if (!class_exists('TCPDF')) {
+          return false;
+        }
+      }
+
+      return class_exists($class) && is_subclass_of($class,$interface);
+    }
+
+    return false;
   }
 
   /**
@@ -37,7 +55,7 @@ class DirectoryPdfPage extends ControllerBase {
     $doc = new DirectoryPdf;
     $generateFunc = function() use($doc) {
       $doc->generate();
-      $doc->Output();
+      $doc->output();
     };
 
     // Create response to stream PDF generation as a file download.

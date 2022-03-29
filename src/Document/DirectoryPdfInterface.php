@@ -28,5 +28,5 @@ interface DirectoryPdfInterface {
    *  Optional file to which output is streamed. If omitted, then the file is
    *  streamed to standard output (i.e. the request body stream).
    */
-  public function output(string $file = '') : void;
+  public function outputDocument(string $file = '') : void;
 }

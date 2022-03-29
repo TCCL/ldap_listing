@@ -9,7 +9,9 @@
 namespace Drupal\ldap_listing\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\ldap_listing\Document\DirectoryPdf;
+use Drupal\file\Entity\File;
+use Drupal\ldap_listing\Document\DirectoryPdfInterface;
+use Drupal\ldap_listing\Document\DirectoryPdfHeaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,8 +28,8 @@ class DirectoryPdfPage extends ControllerBase {
     $interface = '\Drupal\ldap_listing\Document\DirectoryPdfInterface';
     $config = \Drupal::config('ldap_listing.settings');
 
-    if ($config->get('pdf_enabled')) {
-      $class = $config->get('pdf_class') ?? self::DEFAULT_CLASS;
+    if ($config->get('enable_pdf')) {
+      $class = $config->get('pdf_class') ?: self::DEFAULT_CLASS;
 
       // Check TCPDF for default class to avoid error.
       if ($class == self::DEFAULT_CLASS) {
@@ -51,11 +53,31 @@ class DirectoryPdfPage extends ControllerBase {
       throw new NotFoundHttpException;
     }
 
+    $config = \Drupal::config('ldap_listing.settings');
+
     // Create PDF to generate and output via streamed response.
-    $doc = new DirectoryPdf;
+
+    $pdfClass = $config->get('pdf_class');
+    $doc = new $pdfClass;
+
+    assert($doc implements DirectoryPdfInterface);
+
+    if ($doc implements DirectoryPdfHeaderInterface) {
+      $pdfHeaderFileId = $config->get('pdf_header_image_file_id');
+      $image = File::load($pdfHeaderFileId);
+      if ($image) {
+        $fileSystem = \Drupal::service('file_system');
+        $filePath = $fileSystem->realpath($image->getFileUri());
+        $doc->setHeaderImage($filePath);
+      }
+
+      $pdfHeaderTitle = $config->get('pdf_title') ?: $config->get('title');
+      $doc->setHeaderTitle($pdfHeaderTitle);
+    }
+
     $generateFunc = function() use($doc) {
       $doc->generate();
-      $doc->output();
+      $doc->outputDocument();
     };
 
     // Create response to stream PDF generation as a file download.

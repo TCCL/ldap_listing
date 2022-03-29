@@ -80,6 +80,8 @@ function ldap_listing_update_9105() {
   $settings = $configFactory->getEditable('ldap_listing.settings');
   $settings->set('enable_pdf',false);
   $settings->set('pdf_class','');
+  $settings->set('pdf_title','');
+  $settings->set('pdf_header_image_file_id',null);
   $settings->save();
 
   return t('Added new ldap_listing settings properties');

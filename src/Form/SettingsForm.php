@@ -11,6 +11,7 @@ namespace Drupal\ldap_listing\Form;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
 use Drupal\ldap_listing\DirectoryQuery;
 use Drupal\ldap_listing\Support\EntryParser;
 
@@ -241,11 +242,47 @@ class SettingsForm extends ConfigFormBase {
       '#title' => 'PDF Document Generation Class',
       '#default_value' => $config->get('pdf_class'),
       '#description' => (
-        'Specify the fully-qualified PHP class name of the class that is to handle '
-        . 'PDF generation for the directory page. Leave blank to utilize the default '
-        . 'functionality.'
+        'Specify the fully-qualified PHP class name that implements PDF '
+        . 'generation. Leave empty to utilize the default functionality '
+        . 'provided by the <i>ldap_listing</i> module.'
       ),
     ];
+
+    $form['pdf_title'] = [
+      '#type' => 'textfield',
+      '#title' => 'PDF Title',
+      '#default_value' => $config->get('pdf_title'),
+      '#description' => (
+        'The title text for the directory PDF document. May also be used to '
+        . 'name the file download.'
+      ),
+    ];
+
+    $form['pdf_header_image_file'] = [
+      '#type' => 'managed_file',
+      '#title' => 'PDF Header Image',
+      '#upload_location' => 'public://images/ldap_listing',
+      '#multiple' => false,
+      '#upload_validators' => [
+        // We include common file extensions for all image types supported by
+        // TCPDF.
+        'file_validate_extensions' => ['png jpg jpeg svg'],
+      ],
+      '#description' => (
+        'Provide an image to use in the PDF header. Note: the use of this '
+        . 'image depends on which PDF generation implementation you select.'
+      ),
+    ];
+
+    $imageId = (int)$config->get('pdf_header_image_file_id');
+    if ($imageId > 0) {
+      $image = File::load($imageId);
+      if ($image) {
+        $form['pdf_header_image_file']['#default_value'] = [
+          'target_id' => $image->id(),
+        ];
+      }
+    }
 
     return parent::buildForm($form,$form_state);
   }
@@ -338,10 +375,25 @@ class SettingsForm extends ConfigFormBase {
       'preamble' => 'preamble',
       'enable_pdf' => 'enable_pdf',
       'pdf_class' => 'pdf_class',
+      'pdf_title' => 'pdf_title',
     ];
 
     foreach ($entries as $formKey => $configKey) {
       $config->set($configKey,$form_state->getValue($formKey));
+    }
+
+    $pdfHeaderImageFile = $form_state->getValue('pdf_header_image_file');
+    if (is_array($pdfHeaderImageFile) && isset($pdfHeaderImageFile[0])) {
+      $imageId = (int)$pdfHeaderImageFile[0];
+      $config->set('pdf_header_image_file_id',$imageId ?: null);
+
+      if ($imageId) {
+        $file = File::load($imageId);
+        if ($file->isTemporary()) {
+          $file->setPermanent();
+          $file->save();
+        }
+      }
     }
 
     $config->save();

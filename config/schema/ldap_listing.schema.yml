@@ -66,3 +66,9 @@ ldap_listing.settings:
     pdf_class:
       type: text
       label: 'If non-empty, an alternative class for generating the directory PDF'
+    pdf_title:
+      type: text
+      label: 'Title text to use in directory PDF'
+    pdf_header_image_file_id:
+      type: integer
+      label: 'ID of image to use in header of directory PDF'

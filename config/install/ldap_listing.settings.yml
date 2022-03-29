@@ -18,3 +18,5 @@ user_page_attributes: []
 preamble: ''
 enable_pdf: false
 pdf_class: ''
+pdf_title: ''
+pdf_logo_file_id: null

@@ -29,4 +29,12 @@ interface DirectoryPdfInterface {
    *  streamed to standard output (i.e. the request body stream).
    */
   public function outputDocument(string $file = '') : void;
+
+  /**
+   * Sets the section data to render in the PDF.
+   *
+   * @param array $sections
+   *  An array of section arrays ordered in the configuration-defined order.
+   */
+  public function setDirectorySections(array $sections) : void;
 }

@@ -25,7 +25,12 @@ trait TCPDFUtilsTrait {
   }
 
   private function drawTextHavingWidth($text,$width,$align = 'L',$rightMargin = 0.1,$border = 0) {
-    $this->Cell($width,0,$text,$border,0,$align);
+    $this->Cell($width,0,$text,$border,0,$align,false,'',0,false,'T','C');
+    $this->SetX($this->GetX() + $rightMargin);
+  }
+
+  private function drawTextHavingDims($text,$width,$height,$align = 'L',$rightMargin = 0.1,$border = 0) {
+    $this->Cell($width,$height,$text,$border,0,$align,false,'',0,false,'T','C');
     $this->SetX($this->GetX() + $rightMargin);
   }
 
@@ -48,7 +53,9 @@ trait TCPDFUtilsTrait {
     $this->popFont();
   }
 
-  private function drawBlankWithText($text,$length = null,$align = 'C',$ln = 0,$style = '') {
+  private function drawBlankWithText($text,$length = null,$align = 'C',$ln = 0) {
+    list($style,$size,$family) = $this->parseFontHash();
+
     if (!isset($length)) {
       $length = $this->GetStringWidth($text,'',$style);
     }
@@ -67,7 +74,9 @@ trait TCPDFUtilsTrait {
     return $length;
   }
 
-  private function fitText($text,$length,$style = '') {
+  private function fitText($text,$length) {
+    list($style,$size,$family) = $this->parseFontHash();
+
     $length -= 0.1;
     $cand = $text;
     $nrm = 0;

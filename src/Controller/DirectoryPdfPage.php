@@ -63,6 +63,7 @@ class DirectoryPdfPage extends ControllerBase {
 
     assert($doc instanceof DirectoryPdfInterface);
 
+    // Apply header info to document if it implements the header interface.
     if ($doc instanceof DirectoryPdfHeaderInterface) {
       $pdfHeaderFileId = $config->get('pdf_header_image_file_id');
       $image = File::load($pdfHeaderFileId);
@@ -76,6 +77,14 @@ class DirectoryPdfPage extends ControllerBase {
       $doc->setHeaderTitle($pdfHeaderTitle);
     }
 
+    // Apply sections to document.
+    $query = \Drupal::service('ldap_listing.query');
+    $query->bind();
+    $flag = $query->setExcludeFromDirectory(true);
+    $doc->setDirectorySections($query->queryAllCached($time));
+    $query->setExcludeFromDirectory($flag);
+
+    // Create callback for generating output.
     $generateFunc = function() use($doc) {
       $doc->generate();
       $doc->outputDocument();

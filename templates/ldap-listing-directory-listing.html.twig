@@ -36,7 +36,7 @@
   <div class="ldap-listing-directory__top-matter">
     {% if pdf.enabled %}
       <div class="ldap-listing-directory__pdf-form-wrapper">
-        <form class="ldap-listing-directory__pdf-form" method="get" action="{{ pdf.action }}">
+        <form class="ldap-listing-directory__pdf-form" method="get" action="{{ pdf.action }}" target="_blank">
           <div class="ldap-listing-directory__pdf-form-controls">
             <div>
               <input id="ldap-listing-orient-p" type="radio" name="orient" value="P" checked> <label for="ldap-listing-orient-p">Portrait</label>

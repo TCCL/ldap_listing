@@ -57,12 +57,13 @@ class DirectoryPdfPage extends ControllerBase {
 
     // Create PDF to generate and output via streamed response.
 
-    $pdfClass = $config->get('pdf_class');
-    $doc = new $pdfClass;
+    $orient = $request->query->get('orient','P');
+    $pdfClass = $config->get('pdf_class') ?: self::DEFAULT_CLASS;
+    $doc = new $pdfClass($orient);
 
-    assert($doc implements DirectoryPdfInterface);
+    assert($doc instanceof DirectoryPdfInterface);
 
-    if ($doc implements DirectoryPdfHeaderInterface) {
+    if ($doc instanceof DirectoryPdfHeaderInterface) {
       $pdfHeaderFileId = $config->get('pdf_header_image_file_id');
       $image = File::load($pdfHeaderFileId);
       if ($image) {

@@ -4,56 +4,66 @@
  * ldap_listing
  */
 
-.ldap-listing-directory-listing {
+/* Directory page */
+
+.ldap-listing-directory {
 
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-{
+.ldap-listing-directory__top-matter {
   margin: 30px 7.5%;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-box-wrapper
-{
+.ldap-listing-directory__pdf-form-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0;
+}
+
+.ldap-listing-directory__pdf-form {
+  flex: 0 0 30%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .ldap-listing-directory__pdf-form {
+    flex: 1;
+  }
+}
+
+.ldap-listing-directory__pdf-form-controls {
+  flex: 1;
+}
+
+.ldap-listing-directory__pdf-form-controls label {
+  display: inline;
+}
+
+.ldap-listing-directory__search-box-wrapper {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-box-wrapper
-  > .directory-listing-search-box
-{
+.ldap-listing-directory__search-box {
   flex: 1;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-results
-{
+.ldap-listing-directory__search-results {
   padding: 10px;
   margin: 15px 0;
   border: 3px solid #eee;
   border-radius: 10px;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-results:empty
-{
+.ldap-listing-directory__search-results:empty {
   visibility: hidden;
   margin: 0;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-results
-  > .directory-listing-search-result-row
-{
+.ldap-listing-directory__search-result-row {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -63,95 +73,69 @@
   padding: 0 0 5px 0;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-results
-  > .directory-listing-search-result-row:last-child
-{
+.ldap-listing-directory__search-result-row:last-child {
   border-bottom: none;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-search-results
-  > .directory-listing-search-result-row
-  > .directory-listing-search-result-cell
-{
+.ldap-listing-directory__search-result-cell {
   flex: 1;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-top-matter
-  > .directory-listing-preamble-wrapper
-{
+.ldap-listing-directory__preamble {
   font-style: italic;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-{
+.ldap-listing-directory__sections {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: flex-start;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-{
+.ldap-listing-directory__section {
   flex: 1 0 50%;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  > .directory-listing-section
-{
+.ldap-listing-directory__bottom-message {
+  margin: 35px 0 0 0;
+  text-align: right;
+  font-style: italic;
+}
+
+/* Directory section field */
+
+.ldap-listing-field {
+
+}
+
+/* Directory section */
+
+.ldap-listing-section {
+
+}
+
+.ldap-listing-section__inner {
   margin: 5px;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .heading,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .heading
-{
+.ldap-listing-section__heading {
   background-color: #eee;
-  font-size: 1.5rem;
-  font-weight: bold;
   padding: 10px 5px;
   border: 2px solid black;
   border-radius: 5px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .heading
-  .abbrev,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .heading
-  .abbrev
-{
-  font-size: 1.25rem;
+.ldap-listing-section__heading h2,
+.ldap-listing-section__heading h3 {
+  margin: 0;
+  font-weight: bold;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-{
+.ldap-listing-section__header-footer {
   margin: 15px 0 15px 25%;
   display: table;
   width: 75%;
@@ -159,16 +143,7 @@
   border-collapse: collapse;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-{
+.ldap-listing-section__header-footer-entry {
   display: table-row;
   width: 100%;
   flex-flow: row nowrap;
@@ -177,86 +152,28 @@
   border-bottom: 1px solid #eee;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry:last-child,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry:last-child
-{
+.ldap-listing-section__header-footer-entry:last-child {
   border-bottom: none;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item
-{
+.ldap-listing-section__header-footer-entry-item {
   display: table-cell;
   padding: 0 5px 0 5px;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item.nowrap,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item:nowrap
-{
+.ldap-listing-section__header-footer-entry-item--nowrap {
   white-space: nowrap;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item:first-child,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .header-footer
-  > .entry
-  > .entry-item:first-child
-{
+.ldap-listing-section__header-footer-entry-item:first-child {
   font-weight: bold;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-{
+.ldap-listing-section__body {
   margin: 7.5px;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .error,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .error
-{
+.ldap-listing-section__body-error {
   padding: 2em;
   background-color: #eb8d8d;
   display: flex;
@@ -266,16 +183,7 @@
   border-radius: 0.5em;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .empty,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .empty
-{
+.ldap-listing-section__body-empty {
   padding: 2em;
   display: flex;
   flex-flow: row nowrap;
@@ -283,16 +191,7 @@
   font-size: 18px;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-{
+.ldap-listing-section__user-entry {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -300,83 +199,33 @@
   border-bottom: 1px solid #eee;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:last-child,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry:last-child
-{
+.ldap-listing-section__user-entry:last-child {
   border-bottom: none;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item
-{
+.ldap-listing-section__user-entry-item {
   flex: 1 0;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .phone,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .phone
-{
+.ldap-listing-section__user-entry-item--phone {
   text-align: right;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-sections
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name,
-.ldap-listing-directory-listing-field
-  > .directory-listing-section-wrapper
-  .body
-  > .user-entry
-  > .user-entry-item.name
-{
+.ldap-listing-section__user-entry-item--name {
   display: flex;
   align-items: center;
 }
 
-.ldap-listing-directory-listing
-  .mail-link-wrapper,
-.ldap-listing-directory-listing-field
-  .mail-link-wrapper
-{
+/* Mail Link */
+
+.ldap-listing-mail-link {
   position: relative;
   margin: 0 auto;
   width: 24px;
   height: 24px;
 }
 
-.ldap-listing-directory-listing
-  .mail-link-wrapper
-  > .mail-link,
-.ldap-listing-directory-listing-field
-  .mail-link-wrapper
-  > .mail-link
-{
+.ldap-listing-mail-link__anchor {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -384,30 +233,19 @@
   visibility: hidden;
   padding: 0 4px;
   font-size: 28px;
+
+  /* Anticipate common styles to require clearing */
   text-decoration: none;
   border-bottom: none;
 }
 
-.ldap-listing-directory-listing
-  .user-entry:hover
-  .mail-link-wrapper
-  > .mail-link,
-.ldap-listing-directory-listing
-  .directory-listing-search-result-row:hover
-  .mail-link-wrapper
-  > .mail-link,
-.ldap-listing-directory-listing-field
-  .user-entry:hover
-  .mail-link-wrapper:hover
-  > .mail-link
-{
-  visibility: visible;
+.ldap-listing-mail-link__anchor:hover {
+  /* Anticipate common styles to require clearing */
+  text-decoration: none;
+  border-bottom: none;
 }
 
-.ldap-listing-directory-listing
-  > .directory-listing-bottom-message
-{
-  margin: 35px 0 0 0;
-  text-align: right;
-  font-style: italic;
+.ldap-listing-section__user-entry:hover .ldap-listing-mail-link__anchor,
+.ldap-listing-directory__search-result-row:hover .ldap-listing-mail-link__anchor {
+  visibility: visible;
 }

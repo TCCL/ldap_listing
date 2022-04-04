@@ -37,15 +37,16 @@ use Drupal\ldap_listing\Support\EntryParser;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/ldap_listing_directory_section/add",
- *     "edit-form" = "/admin/structure/ldap_listing_directory_section/{ldap_listing_directory_section}/edit",
- *     "delete-form" = "/admin/structure/ldap_listing_directory_section/{ldap_listing_directory_section}/delete",
- *     "collection" = "/admin/structure/ldap_listing_directory_section"
+ *     "add-form" = "/admin/structure/ldap_listing/directory_section/add",
+ *     "edit-form" = "/admin/structure/ldap_listing/directory_section/{ldap_listing_directory_section}/edit",
+ *     "delete-form" = "/admin/structure/ldap_listing/directory_section/{ldap_listing_directory_section}/delete",
+ *     "collection" = "/admin/structure/ldap_listing/directory_section"
  *   },
  *   config_export = {
  *     "id",
  *     "uuid",
  *     "label",
+ *     "description",
  *     "abbrev",
  *     "group_dn",
  *     "depth",

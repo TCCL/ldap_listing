@@ -1,5 +1,13 @@
 ## ldap_listing.routing.yml
 
+ldap_listing.structure:
+  path: '/admin/structure/ldap_listing'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'LDAP Directory Listing Configuration'
+  requirements:
+    _permission: 'administer ldap_listing'
+
 ldap_listing.settings_page:
   path: '/admin/config/ldap_listing'
   defaults:
@@ -15,3 +23,17 @@ ldap_listing.directory_page:
     _title_callback: '\Drupal\ldap_listing\Controller\DirectoryPage::getTitle'
   requirements:
     _permission: 'access content'
+
+ldap_listing.directory_page_pdf:
+  path: '/ldap_listing/directory/pdf'
+  defaults:
+    _controller: '\Drupal\ldap_listing\Controller\DirectoryPdfPage::getContent'
+  requirements:
+    _permission: 'access content'
+
+ldap_listing.clear_cache:
+  path: '/ldap_listing/cache-clear'
+  defaults:
+    _controller: '\Drupal\ldap_listing\Controller\CacheClear::clearCache'
+  requirements:
+    _permission: 'administer ldap_listing'

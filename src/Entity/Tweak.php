@@ -33,10 +33,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "label" = "label"
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/ldap_listing_tweak/add",
- *     "edit-form" = "/admin/structure/ldap_listing_tweak/{ldap_listing_tweak}/edit",
- *     "delete-form" = "/admin/structure/ldap_listing_tweak/{ldap_listing_tweak}/delete",
- *     "collection" = "/admin/structure/ldap_listing_tweak"
+ *     "add-form" = "/admin/structure/ldap_listing/tweak/add",
+ *     "edit-form" = "/admin/structure/ldap_listing/tweak/{ldap_listing_tweak}/edit",
+ *     "delete-form" = "/admin/structure/ldap_listing/tweak/{ldap_listing_tweak}/delete",
+ *     "collection" = "/admin/structure/ldap_listing/tweak"
  *   },
  *   config_export = {
  *     "id",

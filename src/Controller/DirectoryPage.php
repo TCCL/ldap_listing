@@ -8,6 +8,7 @@
 
 namespace Drupal\ldap_listing\Controller;
 
+use Drupal\Core\Url;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Controller\ControllerBase;
@@ -78,6 +79,16 @@ class DirectoryPage extends ControllerBase {
       $preambleMessageLines[] = new HtmlEscapedText($line);
     }
 
+    $pdfEnabled = DirectoryPdfPage::enabled();
+    $pdf = [
+      'enabled' => $pdfEnabled,
+      'action' => null,
+    ];
+    if ($pdfEnabled) {
+      $url = Url::fromRoute('ldap_listing.directory_page_pdf');
+      $pdf['action'] = $url->toString();
+    }
+
     $render = [
       '#theme' => 'ldap_listing_directory_listing',
       '#sections' => $sections,
@@ -86,6 +97,7 @@ class DirectoryPage extends ControllerBase {
       '#last_generated_message' => (
         date('F jS \a\t g:i A',$time)
       ),
+      '#pdf' => $pdf,
       '#attached' => [
         'library' => ['ldap_listing/directory-listing'],
       ],

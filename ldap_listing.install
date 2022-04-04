@@ -55,6 +55,39 @@ function ldap_listing_update_9103() {
 }
 
 /**
+ * Update directory_section config entity schema.
+ */
+function ldap_listing_update_9104() {
+  $configFactory = \Drupal::configFactory();
+
+  // Add 'description' property to each directory section config.
+  foreach ($configFactory->listAll('ldap_listing.directory_section.') as $name) {
+    $config = $configFactory->getEditable($name);
+    $config->set('description','');
+    $config->save();
+  }
+
+  return t('Updated ldap_listing_directory_section config entities.');
+}
+
+/**
+ * Updates ldap_listing settings object.
+ */
+function ldap_listing_update_9105() {
+  $configFactory = \Drupal::configFactory();
+
+  // Add new properties to ldap_listing.settings.
+  $settings = $configFactory->getEditable('ldap_listing.settings');
+  $settings->set('enable_pdf',false);
+  $settings->set('pdf_class','');
+  $settings->set('pdf_title','');
+  $settings->set('pdf_header_image_file_id',null);
+  $settings->save();
+
+  return t('Added new ldap_listing settings properties');
+}
+
+/**
  * Local Variables:
  * mode:php
  * End:

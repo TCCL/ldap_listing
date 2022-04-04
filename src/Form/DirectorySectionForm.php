@@ -25,7 +25,7 @@ class DirectorySectionForm extends EntityForm {
       '#title' => $this->t('Heading'),
       '#maxlength' => 256,
       '#default_value' => $this->entity->label(),
-      '#description' => $this->t('Choose a heading label for this section'),
+      '#description' => $this->t('The heading label for this section.'),
       '#required' => true,
     ];
 
@@ -37,6 +37,15 @@ class DirectorySectionForm extends EntityForm {
         'source' => ['directory_section','label'],
       ],
       '#disabled' => !$this->entity->isNew(),
+    ];
+
+    $form['directory_section']['description'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Description'),
+      '#default_value' => $this->entity->get('description'),
+      '#description' => $this->t('The description label for this section.'),
+      '#maxlength' => 512,
+      '#required' => false,
     ];
 
     $form['directory_section']['abbrev'] = [

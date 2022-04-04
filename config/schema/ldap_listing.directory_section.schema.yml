@@ -10,6 +10,9 @@ ldap_listing.directory_section.*:
     label:
       type: string
       label: 'Display name for section'
+    description:
+      type: string
+      label: 'Description for section'
     abbrev:
       type: string
       label: 'Abbreviation'

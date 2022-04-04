@@ -23,7 +23,7 @@ function delayEvent(fn,ms) {
 
 function makeRow(entry) {
   const row = jQuery("<div>")
-        .addClass("directory-listing-search-result-row");
+        .addClass("ldap-listing-directory__search-result-row");
 
   const matchesMap = {};
   for (let i = 0;i < entry.matches.length;++i) {
@@ -41,7 +41,7 @@ function makeRow(entry) {
 }
 
 function makeCell(inner,match,href) {
-  const cell = jQuery("<div>").addClass("directory-listing-search-result-cell");
+  const cell = jQuery("<div>").addClass("ldap-listing-directory__search-result-cell");
 
   let elem;
   if (href) {
@@ -87,8 +87,8 @@ function makeCell(inner,match,href) {
 }
 
 function makeEmailCell(email) {
-  const elem = jQuery("<div>").addClass("directory-listing-search-result-cell");
-  const wrapper = jQuery("<div>").addClass("mail-link-wrapper");
+  const elem = jQuery("<div>").addClass("ldap-listing-directory__search-result-cell");
+  const wrapper = jQuery("<div>").addClass("ldap-listing-mail-link");
 
   elem.append(wrapper);
 
@@ -96,7 +96,7 @@ function makeEmailCell(email) {
     const a = jQuery("<a>");
     const mailto = "mailto:" + email;
 
-    a.text("✉").addClass("mail-link").attr("href",mailto).attr("title",email);
+    a.text("✉").addClass("ldap-listing-mail-link__anchor").attr("href",mailto).attr("title",email);
     wrapper.append(a);
   }
 
@@ -129,14 +129,14 @@ jQuery(document).ready(($) => {
     ignoreLocation: true
   };
 
-  const $manifest = $("#ldap-listing-directory-listing-manifest");
+  const $manifest = $("#ldap-listing-directory-manifest");
   const manifest = JSON.parse($manifest.html());
   $manifest.remove();
 
   const fuse = new Fuse(manifest,options);
 
-  const $results = $("#ldap-listing-directory-listing-results-region");
-  const $search = $("#ldap-listing-directory-listing-search-box");
+  const $results = $("#ldap-listing-directory-results-region");
+  const $search = $("#ldap-listing-directory-search-box");
 
   const handler = delayEvent(
     () => {

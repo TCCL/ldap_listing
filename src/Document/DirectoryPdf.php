@@ -19,6 +19,7 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
 
   const HEADER_HEIGHT = 0.18;
   const ROW_HEIGHT = 0.0833333;
+  const ROW_PADDING = 0.025;
 
   /**
    * The current Drupal user.
@@ -278,25 +279,27 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
       $section = $sections[$index];
 
       // Estimate the height required for the section.
-      $eh = (1 + !empty($section['description'])) * self::HEADER_HEIGHT
-          + (count($section['entries']) + empty($section['entries'])) * (self::ROW_HEIGHT + 0.025);
+      $hh = (1 + !empty($section['description'])) * self::HEADER_HEIGHT;
+      $eh = $hh + (count($section['entries']) + empty($section['entries'])) * (self::ROW_HEIGHT + self::ROW_PADDING);
 
       if ($y + $eh > $bot) {
         // Split section if too big and exceeds half the available height.
         $h = $bot - $y;
         if ($h >= ($bot - $top) / 2.0) {
-          $h = $h - (1 + !empty($section['description'])) * self::HEADER_HEIGHT;
-          $n = min((int)($h / self::ROW_HEIGHT),count($section['entries']));
+          $n = min(
+            (int)(($h - $hh) / (self::ROW_HEIGHT+self::ROW_PADDING)),
+            count($section['entries'])
+          );
 
           if ($n >= 2) {
             $first = $section;
-            $first['entries'] = array_splice($first['entries'],$n-1);
+            array_splice($first['entries'],$n-1);
             $first['entries'][] = ['cont' => true];
             $queue[] = [$x,$y,$first];
 
             $second = $section;
             $second['cont'] = true;
-            $second['entries'] = array_splice($first['entries'],0,$n-1);
+            array_splice($second['entries'],0,$n-1);
             $sections[$index] = $second;
           }
         }
@@ -401,7 +404,7 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
         }
       }
 
-      $py += self::ROW_HEIGHT + 0.025;
+      $py += self::ROW_HEIGHT + self::ROW_PADDING;
     }
     $this->popFont();
   }

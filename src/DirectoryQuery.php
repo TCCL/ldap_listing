@@ -552,7 +552,7 @@ class DirectoryQuery {
       $entries
     );
 
-    $keep = array_keys(array_unique(array_column($result,'dn')));
+    $keep = array_unique(array_column($result,'dn'));
     $result = array_intersect_key($result,$keep);
 
     array_walk($result,function(array &$entry) use($group) {

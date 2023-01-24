@@ -122,10 +122,9 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
     $TOP = $TMARGIN;
     $BOT = $this->getPageHeight() - $BMARGIN;
 
-    // Divide sections into left and right columns.
-    $i = 0;
-    $left = [];
-    $right = [];
+    // Create 'entries' bucket to consolidate all extra entries for height
+    // calculation.
+    $sections = [];
     foreach ($this->directoryPdfSections as $section) {
       $section['entries'] = array_merge(
         $section['header'],
@@ -133,24 +132,21 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
         $section['footer']
       );
 
-      if ($i++ % 2 == 0) {
-        $left[] = $section;
-      }
-      else {
-        $right[] = $section;
-      }
+      $sections[] = $section;
     }
 
-    $index = [0,0];
+    // Render sections.
+    $index = 0;
     while (true) {
+      // Queue up next page to render.
       $queue = [];
-      $this->queueSections($queue,$index[0],$left,$LEFT,$TOP,$BOT);
-      $this->queueSections($queue,$index[1],$right,$MIDDLE,$TOP,$BOT);
+      $this->queueSections($queue,$index,$sections,$LEFT,$MIDDLE,$TOP,$BOT);
 
       if (empty($queue)) {
         break;
       }
 
+      // Render page.
       $this->AddPage();
       foreach ($queue as $entry) {
         list($x,$y,$section) = $entry;
@@ -158,29 +154,28 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
       }
     }
 
-    foreach ($this->directoryPdfSections as $section) {
-      $i = $index++ % 1;
+    // foreach ($this->directoryPdfSections as $section) {
+    //   $i = $index++ % 1;
 
+    //   $x =& $px[$i];
+    //   $y =& $py[$i];
 
-      $x =& $px[$i];
-      $y =& $py[$i];
+    //   if ($y + $eh > $BOT_MARGIN) {
+    //     if ($y == $TOP) {
 
-      if ($y + $eh > $BOT_MARGIN) {
-        if ($y == $TOP) {
+    //     }
 
-        }
-
-        if ($x != $MIDDLE) {
-          $x = $MIDDLE;
-          $y = $TOP;
-        }
-        else {
-          $this->AddPage();
-          $x = $LEFT;
-          $y = $TOP;
-        }
-      }
-    }
+    //     if ($x != $MIDDLE) {
+    //       $x = $MIDDLE;
+    //       $y = $TOP;
+    //     }
+    //     else {
+    //       $this->AddPage();
+    //       $x = $LEFT;
+    //       $y = $TOP;
+    //     }
+    //   }
+    // }
   }
 
   /**
@@ -272,19 +267,27 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
 
   }
 
-  private function queueSections(array &$queue,int &$index,array &$sections,float $x,float $top,float $bot) {
-    $y = $top;
+  private function queueSections(array &$queue,int &$index,array &$sections,float $x1,float $x2,float $top,float $bot) {
+    $y1 = $top;
+    $y2 = $top;
 
-    for (;$index < count($sections);++$index) {
+    $done = 0;
+
+    $i = 0;
+    while ($index < count($sections)) {
+      $i = ($i % 2)+1;
+      $vx = "x$i";
+      $vy = "y$i";
+
       $section = $sections[$index];
 
       // Estimate the height required for the section.
       $hh = (1 + !empty($section['description'])) * self::HEADER_HEIGHT;
       $eh = $hh + (count($section['entries']) + empty($section['entries'])) * (self::ROW_HEIGHT + self::ROW_PADDING);
 
-      if ($y + $eh > $bot) {
+      if ($$vy + $eh > $bot) {
         // Split section if too big and exceeds half the available height.
-        $h = $bot - $y;
+        $h = $bot - $$vy;
         if ($h >= ($bot - $top) / 2.0) {
           $n = min(
             (int)(($h - $hh) / (self::ROW_HEIGHT+self::ROW_PADDING)),
@@ -295,22 +298,31 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
             $first = $section;
             array_splice($first['entries'],$n-1);
             $first['entries'][] = ['cont' => true];
-            $queue[] = [$x,$y,$first];
 
             $second = $section;
             $second['cont'] = true;
             array_splice($second['entries'],0,$n-1);
             $sections[$index] = $second;
+
+            $section = $first;
+            $index -= 1;
           }
         }
-
-        break;
+        else if ($done > 1) {
+          break;
+        }
+        else {
+          $done += 1;
+          continue;
+        }
       }
 
-      $queue[] = [$x,$y,$section];
+      $queue[] = [$$vx,$$vy,$section];
 
       // Add in estimated height plus some padding for spacing.
-      $y += $eh + 0.1 + 0.05;
+      $$vy += $eh + 0.15;
+      $index += 1;
+      $done = 0;
     }
   }
 

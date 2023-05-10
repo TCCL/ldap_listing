@@ -373,13 +373,13 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
         $px += $w;
 
         $w = $width * (1-$c1) * 0.75;
-        $title = $this->fitText($entry['title'],$w);
+        $title = $this->fitText($entry['title'] ?? 'n/a',$w);
         $this->SetX($px);
         $this->drawTextHavingDims($title,$w,self::ROW_HEIGHT,'L',0);
         $px += $w;
 
         $w = $width * (1-$c1) * 0.25;
-        $phone = $this->fitText($entry['phone'],$w);
+        $phone = $this->fitText($entry['phone'] ?? 'n/a',$w);
         $this->SetX($px);
         $this->drawTextHavingDims($phone,$w,self::ROW_HEIGHT,'R',0);
       }

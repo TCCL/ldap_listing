@@ -439,6 +439,7 @@ class DirectoryQuery {
     $cid = self::makeCacheId();
     $time = time();
 
+    Cache::invalidateTags([DirectoryQuery::CACHE_TAG]);
     $cache->set($cid,$sections,Cache::PERMANENT,[DirectoryQuery::CACHE_TAG]);
 
     $state = \Drupal::state();

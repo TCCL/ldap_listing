@@ -390,8 +390,9 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
       else {
         $px = $x + $width;
 
-        foreach (array_reverse($entry) as $index => $item) {
-          if ($index == count($entry)-1) {
+        $static_entry = array_values(array_filter($entry));
+        foreach (array_reverse($static_entry) as $index => $item) {
+          if ($index == count($static_entry)-1) {
             $style = 'b';
             $this->pushFont($style,6.0);
           }
@@ -410,7 +411,7 @@ class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfH
           $this->drawTextHavingDims($item,$length,self::ROW_HEIGHT,'R',0);
           $px -= 0.1;
 
-          if ($index == count($entry)-1) {
+          if ($index == count($static_entry)-1) {
             $this->popFont();
           }
         }

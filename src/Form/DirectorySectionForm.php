@@ -9,6 +9,11 @@ use Drupal\ldap_listing\DirectoryQuery;
 
 class DirectorySectionForm extends EntityForm {
   /**
+   * @var \Drupal\ldap_listing\Entity\DirectorySectionInterface
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form,FormStateInterface $form_state) {

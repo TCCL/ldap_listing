@@ -10,6 +10,7 @@ namespace Drupal\ldap_listing;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\ldap_listing\Entity\DirectorySectionInterface;
 
 class DirectorySectionEntityListBuilder extends ConfigEntityListBuilder {
   /**
@@ -25,11 +26,15 @@ class DirectorySectionEntityListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = [];
+    if ($entity instanceof DirectorySectionInterface) {
+      $row = [];
 
-    $row['label'] = $entity->label();
-    $row['abbrev'] = $entity->get('abbrev');
+      $row['label'] = $entity->label();
+      $row['abbrev'] = $entity->get('abbrev');
 
-    return $row + parent::buildRow($entity);
+      return $row + parent::buildRow($entity);
+    }
+
+    return parent::buildRow($entity);
   }
 }

@@ -15,6 +15,11 @@ use Drupal\ldap_listing\DirectoryQuery;
 
 class TweakForm extends EntityForm {
   /**
+   * @var \Drupal\ldap_listing\Entity\TweakInterface
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form,FormStateInterface $form_state) {

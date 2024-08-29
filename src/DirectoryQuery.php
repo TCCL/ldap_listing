@@ -9,10 +9,13 @@
 namespace Drupal\ldap_listing;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
+use Drupal\ldap_servers\ServerInterface;
 use Symfony\Component\Ldap\Entry;
 use Symfony\Component\Ldap\Exception\LdapException;
 
@@ -53,72 +56,42 @@ class DirectoryQuery {
     }
   }
 
-  /**
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  private $config;
+  private ImmutableConfig $config;
 
-  /**
-   * @var \Drupal\ldap_listing\TweakManager
-   */
-  private $tweakManager;
+  private TweakManager $tweakManager;
 
-  /**
-   * @var \Drupal\ldap_servers\LdapBridgeInterface
-   */
-  private $ldapBridge;
+  private LdapBridgeInterface $ldapBridge;
 
-  /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  private $entityTypeManager;
+  private EntityStorageInterface $storage;
 
-  /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  private $storage;
-
-  /**
-   * @var \Drupal\ldap_servers\ServerInterface
-   */
-  private $ldapServer;
+  private ServerInterface $ldapServer;
 
   /**
    * The extra UID attribute to pull for user profile page linking.
-   *
-   * @var string
    */
-  private $uidAttrs = [];
+  private array $uidAttrs = [];
 
   /**
    * Cached attribute map.
-   *
-   * @var array
    */
-  private $attrMap = [];
+  private array $attrMap = [];
 
   /**
    * Flag indicating whether the query results should include links to user
    * pages.
-   *
-   * @var bool
    */
-  private $linkToUserPage = false;
+  private bool $linkToUserPage = false;
 
   /**
    * User mapping manager instance used to map LDAP entries to Drupal users.
-   *
-   * @var \Drupal\ldap_listing\UserMappingManager
    */
-  private $userMappingManager;
+  private UserMappingManager $userMappingManager;
 
   /**
    * Determines whether sections are excluded in queryAll() when
    * exclude_from_directory is set on the section config.
-   *
-   * @var bool
    */
-  private $checkExcludeFromDirectory = false;
+  private bool $checkExcludeFromDirectory = false;
 
   /**
    * Creates a new DirectoryQuery instance.
@@ -134,7 +107,6 @@ class DirectoryQuery {
   {
     $this->tweakManager = $tweakManager;
     $this->ldapBridge = $ldapBridge;
-    $this->entityTypeManager = $entityTypeManager;
     $this->storage = $entityTypeManager->getStorage('ldap_listing_directory_section');
 
     $this->config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
@@ -307,6 +279,7 @@ class DirectoryQuery {
    * @return array
    */
   public function querySection(string $sectionId) : array {
+    /** @var \Drupal\ldap_listing\Entity\DirectorySection $section */
     $section = $this->storage->load($sectionId);
     if (!isset($section)) {
       throw new Exception("Section '$sectionId' was not defined");

@@ -58,6 +58,16 @@ use Drupal\ldap_listing\Support\EntryParser;
  * )
  */
 class DirectorySection extends ConfigEntityBase implements DirectorySectionInterface {
+  protected $id;
+  protected $label;
+  protected $description;
+  protected $abbrev;
+  protected $group_dn;
+  protected $depth;
+  protected $header_entries;
+  protected $footer_entries;
+  protected $exclude_from_directory;
+
   /**
    * The weight value used to sort the configuration entity in a list.
    *

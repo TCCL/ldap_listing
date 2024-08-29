@@ -9,7 +9,6 @@
 namespace Drupal\ldap_listing\Controller;
 
 use Drupal\Core\Url;
-use Drupal\Core\Cache\Cache;
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\ldap_listing\DirectoryQuery;
@@ -64,7 +63,7 @@ class DirectoryPage extends ControllerBase {
       $sections = $this->query->queryAllCached($time);
       $this->query->setExcludeFromDirectory($flag);
 
-    } catch (Exception $ex) {
+    } catch (Exception) {
       throw new NotFoundHttpException;
     }
 

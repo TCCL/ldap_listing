@@ -78,6 +78,7 @@ class DirectoryPdfPage extends ControllerBase {
     }
 
     // Apply sections to document.
+    /** @var \Drupal\ldap_listing\DirectoryQuery $query */
     $query = \Drupal::service('ldap_listing.query');
     $query->bind();
     $flag = $query->setExcludeFromDirectory(true);

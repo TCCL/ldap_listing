@@ -61,17 +61,33 @@ class SettingsForm extends ConfigFormBase {
       ),
     ];
 
-    $form['ldap_server'] = [
-      '#type' => 'select',
-      '#title' => 'LDAP Server',
-      '#options' => [
-        self::UNSET => '<Unset>',
-      ] + $servers,
-      '#default_value' => $config->get('ldap_server'),
-      '#description' => (
-        'Select the LDAP server to use for querying the LDAP directory listing'
-      ),
-    ];
+    if (!empty($servers)) {
+      $form['ldap_server'] = [
+        '#type' => 'select',
+        '#title' => 'LDAP Server',
+        '#options' => [
+          self::UNSET => '<Unset>',
+        ] + $servers,
+        '#default_value' => $config->get('ldap_server'),
+        '#description' => (
+          'Select the LDAP server to use for querying the LDAP directory listing'
+        ),
+      ];
+    }
+    else {
+      $form['ldap_server'] = [
+        '#type' => 'select',
+        '#title' => 'LDAP Server',
+        '#options' => [],
+        '#empty_option' => '-- No Options --',
+        '#empty_value' => '',
+        '#default_value' => $config->get('ldap_server'),
+        '#description' => (
+          'No LDAP servers have been created. Create an LDAP server '
+          .'configuration in order to configure this module.'
+        ),
+      ];
+    }
 
     $form['base_dn'] = [
       '#type' => 'textfield',

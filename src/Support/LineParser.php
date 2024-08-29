@@ -12,17 +12,15 @@ namespace Drupal\ldap_listing\Support;
  * Parses input lines used to encode additional directory section entries.
  */
 class LineParser {
-  private $line;
-
-  private $tokens = [];
+  private array $tokens = [];
 
   /**
    * Creates a new LineParser instance.
    *
    * @param string $line
+   *  The line to parse.
    */
   public function __construct(string $line) {
-    $this->line = $line;
     $this->makeTokens(str_split($line));
   }
 

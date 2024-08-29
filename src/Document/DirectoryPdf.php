@@ -11,6 +11,9 @@ namespace Drupal\ldap_listing\Document;
 use DateTime;
 use TCPDF;
 
+/**
+ * Provides a default DirectoryPdfInterface implementation using TCPDF.
+ */
 class DirectoryPdf extends TCPDF implements DirectoryPdfInterface, DirectoryPdfHeaderInterface {
   use TCPDFUtilsTrait;
 

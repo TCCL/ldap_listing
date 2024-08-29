@@ -10,9 +10,9 @@ namespace Drupal\ldap_listing\Support;
 
 class EntryParser {
   /**
-   * @var string[]|string[][]
+   * An array of string entries or an array of arrays of string entries.
    */
-  private $entries;
+  private array $entries;
 
   /**
    * Creates a new EntryParser instance.

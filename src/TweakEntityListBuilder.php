@@ -10,6 +10,7 @@ namespace Drupal\ldap_listing;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\ldap_listing\Entity\TweakInterface;
 
 class TweakEntityListBuilder extends ConfigEntityListBuilder {
   /**
@@ -25,11 +26,15 @@ class TweakEntityListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = [];
+    if ($entity instanceof TweakInterface) {
+      $row = [];
 
-    $row['label'] = $entity->label();
-    $row['user'] = $entity->userDn();
+      $row['label'] = $entity->label();
+      $row['user'] = $entity->userDn();
 
-    return $row + parent::buildRow($entity);
+      return $row + parent::buildRow($entity);
+    }
+
+    return parent::buildRow($entity);
   }
 }

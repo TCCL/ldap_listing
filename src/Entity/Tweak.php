@@ -56,6 +56,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  * )
  */
 class Tweak extends ConfigEntityBase implements TweakInterface {
+  protected $id;
+  protected $label;
   protected $section_id;
   protected $user_dn;
   protected $name_override;

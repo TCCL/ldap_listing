@@ -57,9 +57,10 @@ class TweakManager {
     }
   }
 
-  private function applyTweaksToEntryImpl(array &$entries,
-                                          array &$entry,
-                                          array $tweaks) : void
+  private function applyTweaksToEntryImpl(
+    array &$entries,
+    array &$entry,
+    array $tweaks) : void
   {
     foreach ($tweaks as $tweak) {
       if ($tweak->userDn() != $entry['dn']) {
@@ -113,10 +114,11 @@ class TweakManager {
     }
   }
 
-  private function applyRelativePositionImpl(array &$entries,
-                                             array &$entry,
-                                             string $matchDn,
-                                             int $offset) : void
+  private function applyRelativePositionImpl(
+    array &$entries,
+    array &$entry,
+    string $matchDn,
+    int $offset) : void
   {
     foreach ($entries as $index => &$adjacent) {
       if ($adjacent['dn'] == $matchDn) {

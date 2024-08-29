@@ -10,6 +10,7 @@ namespace Drupal\ldap_listing;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
 use Symfony\Component\Ldap\Entry;
@@ -535,7 +536,7 @@ class DirectoryQuery {
               $img = $imgFieldList->first();
               if ($img) {
                 $userImageUri = $img->entity->getFileUri();
-                $userImageLink = file_create_url($userImageUri);
+                $userImageLink = Url::fromUri($userImageUri);
               }
             }
           }

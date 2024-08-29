@@ -5,7 +5,7 @@ description: Provides a user directory listing compiled from LDAP server entitie
 package: 'Lightweight Directory Access Protocol'
 
 type: module
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9.3 || ^10
 version: 1.6.2
 
 dependencies:

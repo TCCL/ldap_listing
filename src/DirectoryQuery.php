@@ -12,7 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Url;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\ldap_listing\Form\SettingsForm;
 use Drupal\ldap_servers\LdapBridgeInterface;
 use Drupal\ldap_servers\ServerInterface;
@@ -60,6 +60,8 @@ class DirectoryQuery {
 
   private TweakManager $tweakManager;
 
+  private FileUrlGeneratorInterface $urlGenerator;
+
   private LdapBridgeInterface $ldapBridge;
 
   private EntityStorageInterface $storage;
@@ -103,11 +105,13 @@ class DirectoryQuery {
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     LdapBridgeInterface $ldapBridge,
-    TweakManager $tweakManager)
+    TweakManager $tweakManager,
+    FileUrlGeneratorInterface $urlGenerator)
   {
     $this->tweakManager = $tweakManager;
     $this->ldapBridge = $ldapBridge;
     $this->storage = $entityTypeManager->getStorage('ldap_listing_directory_section');
+    $this->urlGenerator = $urlGenerator;
 
     $this->config = \Drupal::config(SettingsForm::CONFIG_OBJECT);
     $serverId = $this->config->get('ldap_server');
@@ -509,7 +513,7 @@ class DirectoryQuery {
               $img = $imgFieldList->first();
               if ($img) {
                 $userImageUri = $img->entity->getFileUri();
-                $userImageLink = Url::fromUri($userImageUri);
+                $userImageLink = $this->urlGenerator->generateString($userImageUri);
               }
             }
           }

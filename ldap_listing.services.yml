@@ -3,7 +3,7 @@
 services:
   ldap_listing.query:
     class: '\Drupal\ldap_listing\DirectoryQuery'
-    arguments: ['@entity_type.manager','@ldap.bridge','@ldap_listing.tweak_manager']
+    arguments: ['@entity_type.manager','@ldap.bridge','@ldap_listing.tweak_manager','@file_url_generator']
 
   ldap_listing.user:
     class: '\Drupal\ldap_listing\UserQuery'

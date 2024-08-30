@@ -6,7 +6,7 @@ package: 'Lightweight Directory Access Protocol'
 
 type: module
 core_version_requirement: ^9.3 || ^10
-version: 1.7.0
+version: 1.7.1
 
 dependencies:
   - ldap:ldap_query
